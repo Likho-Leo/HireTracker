@@ -1,7 +1,27 @@
+using HireTracker.Controllers;
+using HireTracker.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Register DbContext, use sql server as db provider and pull connection string from appsettings.jason
+builder.Services.AddDbContext<AppDbContext>(options => 
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Register identity service with user and role support
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    //users don't need to verify email to sign in
+    options.SignIn.RequireConfirmedAccount = false;
+})
+    //tells identity to use AppDbContext to store user data
+    .AddEntityFrameworkStores<AppDbContext>()
+    //ennables token generation for password reset email
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
