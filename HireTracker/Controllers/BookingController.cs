@@ -120,6 +120,19 @@ namespace HireTracker.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-       
+        [HttpGet]
+        //Shows all the details of a single booking
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || id == 0) return NotFound();
+
+            var booking = await _context.Bookings
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.BookingId == id);
+
+            if (booking == null) return NotFound();
+
+            return View(booking);
+        }
     }
 }
