@@ -49,6 +49,41 @@ namespace HireTracker.Controllers
             return View(booking);
         }
 
-       
+        //Retrive selected record to be updated
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || id == 0) return BadRequest();       //security check to make sure ID in the URL matches the booking being edited
+
+            var booking = await _context.Bookings.FindAsync(id);        //Fetches booking by id
+            if (booking == null) return NotFound();     //returns a 404 if the booking doesn't exist'
+            return View(booking);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, Booking booking)
+        {
+            if (id != booking.BookingId) return BadRequest();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    booking.AmountDue = booking.Passengers * booking.PricePerhead;      //recalculate incase passangers or price per head changes
+                    _context.Update(booking);
+                    await _context.SaveChangesAsync();
+                    TempData["msg"] = "Booking successfully updated!";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException)
+                {
+                    TempData["msg"] = "Booking could not be updated. Please try again.";
+                }
+            }
+
+            return View(booking);
+        }
+
+        
     }
 }
