@@ -84,6 +84,42 @@ namespace HireTracker.Controllers
             return View(booking);
         }
 
-        
+        [HttpGet]
+        //Shows confirmation page
+        public async Task<IActionResult> Delete (int? id)
+        {
+            if (id == null || id == 0) return NotFound();
+
+            var booking = await _context.Bookings
+                .AsNoTracking()     //tells EF not to track changes to the booking object since we're just displaying and not editing it.
+                .FirstOrDefaultAsync(m => m.BookingId == id);       //
+
+            if (booking == null) return NotFound();
+
+            return View(booking);
+        }
+
+        [HttpPost, ActionName("Delete")]        //Two methods can't have the same name so this is renamed to 'DelteConfirmed' but tell ASP.NET to treat it as the 'Delete' action
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                var booking = await _context.Bookings.FindAsync(id);
+                if (booking == null) return NotFound();   
+                
+                _context.Bookings.Remove(booking);      //marks the record for deltion
+                await _context.SaveChangesAsync();      //commits the deletion to the database
+                TempData["msg"] = "Booking successfully deleted!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+                TempData["msg"] = "Booking could not be deleted. Please try again.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+       
     }
 }
