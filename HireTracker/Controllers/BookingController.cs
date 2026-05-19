@@ -18,6 +18,37 @@ namespace HireTracker.Controllers
             return View(await _context.Bookings.ToListAsync());
         }
 
+        //Redirects to the create booking/ new booking view
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]      //This only fires when form is submitted
+        [ValidateAntiForgeryToken]      //Prevents cross site request fogery attacks
+        public async Task<IActionResult> Create(Booking booking)
+        {
+            //checks all '[Required]' annotations pass before saving
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    booking.CreatedAt = DateTime.Now;
+                    booking.AmountDue = booking.PricePerhead * booking.Passengers;
+                    _context.Bookings.Add(booking);
+                    await _context.SaveChangesAsync();
+                    TempData["msg"] = "Booking successfully added!";
+                    return RedirectToAction(nameof(Index));     
+                }
+                catch (DbUpdateException)
+                {
+                    TempData["msg"] = "Booking could not be saved. Please try again.";
+                }
+            }
+            return View(booking);
+        }
+
        
     }
 }
