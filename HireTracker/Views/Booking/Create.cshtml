@@ -1,0 +1,102 @@
+﻿@model HireTracker.Models.Booking
+
+@{
+	ViewData["Title"] = "Create Booking";
+}
+<div class="create-header">
+	<div>
+		<a asp-action="Index" class="btn">Back</a>
+		<h4>New Bookings</h4>
+	</div>
+
+	<div class="create-container">
+		
+		<form asp-action="Create" method="post" asp-antiforgery="true">
+			<div>
+				<h6 class="section-header">TRIP DETAILS</h6>
+				<hr />
+			</div>
+
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input asp-for="BookingId" type="hidden" class="form-control" />
+
+			<label asp-for="Date" class="form-label">Date</label>
+			<input asp-for="Date" type="date" class="form-control" id="date" placeholder="Select date" />
+			<span class="text-danger" asp-validation-for="Date"></span>
+
+			<label asp-for="Vehicle" class="form-label">Vehicle</label>
+			<select asp-for="Vehicle" class="form-select">
+				<option value="">Select vehicle</option>
+				<option value="15 seater">15 seater</option>
+				<option value="22 seater">22 seater</option>
+				<option value="65 seater">65 seater</option>
+			</select>
+
+			<label asp-for="Pickup" class="form-label">Pickup location</label>
+			<input asp-for="Pickup" type="text" class="form-control" id="pickup" placeholder="Enter pickup location" />
+			<span class="text-danger" asp-validation-for="Pickup"></span>
+
+			<label asp-for="Dropoff" class="form-label">Dropoff location</label>
+			<input asp-for="Dropoff" type="text" class="form-control" id="dropoff" placeholder="Enter dropoff location" />
+			<span class="text-danger" asp-validation-for="Dropoff"></span>
+
+			<label asp-for="TripStatus" class="form-label">Trip status</label>
+			<select asp-for="TripStatus" class="form-select" w-auto>
+				<option value="">Select trip status</option>
+				<option value="Completed">Completed</option>
+				<option value="Pending">Pendings</option>
+			</select>
+			<span class="text-danger" asp-validation-for="TripStatus"></span>
+
+			<div>
+				<h6 class="section-header">CLIENT DETAILS</h6>
+				<hr />
+			</div>
+
+			<label asp-for="CompanyName" class="form-label">Company name</label>
+			<input asp-for="CompanyName" type="text" class="form-control" id="companyName" placeholder="Enter company name" />
+			<span class="text-danger" asp-validation-for="CompanyName"></span>
+
+			<label asp-for="ContactNumber" class="form-label">Contact number</label>
+			<input asp-for="ContactNumber" type="text" class="form-control" id="contactNumber" placeholder="Enter company number" />
+			<span class="text-danger" asp-validation-for="ContactNumber"></span>
+
+			<div>
+				<h6 class="section-header">PAYMENT DETAILS</h6>
+				<hr />
+			</div>
+
+			<label asp-for="Passengers" class="form-label">Number of passangers</label>
+			<input asp-for="Passengers" type="number" class="form-control" id= "passengers" placeholder="e.g. 15" />
+			<span class="text-danger" asp-validation-for="Passengers"></span>
+
+			<label asp-for="PricePerhead" class="form-label">Price per head (R)</label>
+			<input asp-for="PricePerhead" type="number" class="form-control" id="pricePerhead" placeholder="e.g. 50" />
+			<span class="text-danger" asp-validation-for="PricePerhead"></span>
+
+			<label asp-for="AmountPaid" class="form-label">Amount paid (R)</label>
+			<input asp-for="AmountPaid" type="number" class="form-control" id="amountPaid" placeholder="e.g. 0" />
+			<span class="text-danger" asp-validation-for="AmountPaid"></span>
+
+			<label asp-for="PaymentStatus" class="form-label">Payment status</label>
+			<select asp-for="PaymentStatus" class="form-select" w-auto>
+				<option value="">Select Payment status</option>
+				<option value="Paid">Paid</option>
+				<option value="Partial">Partial</option>
+				<option value="Owing">Owing</option>
+			</select>
+			<span class="text-danger" asp-validation-for="PaymentStatus"></span>
+
+			<div class="container-footer">
+				<label asp-for="AmountDue" class="form-label">Amount Due (auto calculated)</label>
+				<span id="amountDue">R0.00</span>
+				
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn" />
+				<a asp-action="Index" class="btn">Cancel</a>
+			</div>
+		</form>
+	</div>
+</div>
