@@ -29,7 +29,7 @@ namespace HireTracker.Controllers
         [ValidateAntiForgeryToken]      //Prevents cross site request fogery attacks
         public async Task<IActionResult> Create(Booking booking)
         {
-            //checks all '[Required]' annotations pass before saving
+            //checks all '[Required]' annotations pass before saving-
             if (ModelState.IsValid)
             {
                 try
