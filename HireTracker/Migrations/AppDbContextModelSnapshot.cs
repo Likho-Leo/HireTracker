@@ -34,7 +34,7 @@ namespace HireTracker.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("AmountPaid")
-                        .HasColumnType("decimal(18,2");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -53,6 +53,9 @@ namespace HireTracker.Migrations
                     b.Property<string>("Dropoff")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Passengers")
                         .HasColumnType("int");

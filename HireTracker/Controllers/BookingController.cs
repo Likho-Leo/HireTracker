@@ -15,7 +15,9 @@ namespace HireTracker.Controllers
         //async/await methods for db calls so app doesn't freeze while waiting for data
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Bookings.ToListAsync());
+            return View(await _context.Bookings
+                .Where(m => !m.IsDeleted)
+                .ToListAsync());        //filter out deleted records
         }
 
         //Redirects to the create booking/ new booking view
@@ -55,7 +57,8 @@ namespace HireTracker.Controllers
         {
             if (id == null || id == 0) return BadRequest();       //security check to make sure ID in the URL matches the booking being edited
 
-            var booking = await _context.Bookings.FindAsync(id);        //Fetches booking by id
+            var booking = await _context.Bookings
+                .FirstOrDefaultAsync(m => m.BookingId == id && !m.IsDeleted);        //Fetches booking by id
             if (booking == null) return NotFound();     //returns a 404 if the booking doesn't exist'
             return View(booking);
         }
@@ -92,7 +95,7 @@ namespace HireTracker.Controllers
 
             var booking = await _context.Bookings
                 .AsNoTracking()     //tells EF not to track changes to the booking object since we're just displaying and not editing it.
-                .FirstOrDefaultAsync(m => m.BookingId == id);       //
+                .FirstOrDefaultAsync(m => m.BookingId == id && !m.IsDeleted);       //
 
             if (booking == null) return NotFound();
 
@@ -108,7 +111,8 @@ namespace HireTracker.Controllers
                 var booking = await _context.Bookings.FindAsync(id);
                 if (booking == null) return NotFound();   
                 
-                _context.Bookings.Remove(booking);      //marks the record for deltion
+                booking.IsDeleted = true;
+                _context.Update(booking);               //Change isDeleted true for soft delete
                 await _context.SaveChangesAsync();      //commits the deletion to the database
                 TempData["msg"] = "Booking successfully deleted!";
                 return RedirectToAction(nameof(Index));
@@ -128,6 +132,7 @@ namespace HireTracker.Controllers
 
             var booking = await _context.Bookings
                 .AsNoTracking()
+                .Where(b => !b.IsDeleted)
                 .FirstOrDefaultAsync(m => m.BookingId == id);
 
             if (booking == null) return NotFound();
