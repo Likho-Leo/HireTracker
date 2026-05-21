@@ -1,0 +1,46 @@
+﻿@model HireTracker.Models.Booking
+
+@{
+	ViewData["Title"] = "Booking details";
+}
+
+<h4>Details</h4>
+<div>
+	<dl>
+		<dt>@Html.DisplayNameFor(model => model.Date)</dt>
+		<dd>@Html.DisplayFor(model => model.Date)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.CompanyName)</dt>
+		<dd>@Html.DisplayFor(model => model.CompanyName)</dd>
+
+		<dt>Route</dt>
+		<dd>@Model.Pickup ->@Model.Dropoff</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.Vehicle)</dt>
+		<dd>@Html.DisplayFor(model => model.Vehicle)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.Passengers)</dt>
+		<dd>@Html.DisplayFor(model => model.Passengers)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.AmountDue)</dt>
+		<dd>@Html.DisplayFor(model => model.AmountDue)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.AmountPaid)</dt>
+		<dd>@Html.DisplayFor(model => model.AmountPaid)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.PaymentStatus)</dt>
+		<dd>@Html.DisplayFor(model => model.PaymentStatus)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.TripStatus)</dt>
+		<dd>@Html.DisplayFor(model => model.TripStatus)</dd>
+
+		<dt>@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+		<dd>@Html.DisplayFor(model => model.CreatedAt)</dd>
+	</dl>
+
+	<form asp-action="Edit" method="post" asp-antiforgery="true">
+		<input type="hidden" asp-for="BookingId" />
+		<input type="submit" value="Edit" class="btn" />
+		<a asp-action="Index" class="btn">Cancel</a>
+	</form>
+</div>
