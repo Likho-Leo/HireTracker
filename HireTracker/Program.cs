@@ -19,7 +19,7 @@ builder.Services.Configure<ResendClientOptions>(o =>
 });
 builder.Services.AddTransient<IResend, ResendClient>();
 
-//register emailServices
+//register _emailServices
 builder.Services.AddTransient<EmailServices>();
 
 //Register DbContext, use sql server as db provider and pull connection string from appsettings.jason
