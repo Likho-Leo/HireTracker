@@ -1,5 +1,6 @@
 using HireTracker.Controllers;
 using HireTracker.Models;
+using HireTracker.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Resend;
@@ -9,13 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//register resend
 builder.Services.AddOptions();
 builder.Services.AddHttpClient<ResendClient>();
 builder.Services.Configure<ResendClientOptions>(o =>
 {
-    o.ApiToken = builder.Configuration["ResendSettings: ApiKey"];
+    o.ApiToken = builder.Configuration["ResendSettings:ApiKey"];
 });
 builder.Services.AddTransient<IResend, ResendClient>();
+
+//register emailServices
+builder.Services.AddTransient<EmailServices>();
 
 //Register DbContext, use sql server as db provider and pull connection string from appsettings.jason
 builder.Services.AddDbContext<AppDbContext>(options => 
