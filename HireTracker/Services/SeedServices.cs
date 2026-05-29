@@ -5,7 +5,7 @@ namespace HireTracker.Services
 {
     public class SeedServices
     {
-        public async Task SeedData (IServiceProvider serviceProvider)
+        public static async Task SeedData (IServiceProvider serviceProvider)
         {
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();

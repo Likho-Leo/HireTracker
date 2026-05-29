@@ -11,6 +11,13 @@ namespace HireTracker.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly EmailServices _emailServices;
 
+        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, EmailServices emailServices)
+        {
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _emailServices = emailServices;
+        }
+
         [HttpGet]
         public IActionResult Login()
         {
