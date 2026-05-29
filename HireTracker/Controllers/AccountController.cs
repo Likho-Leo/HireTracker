@@ -47,7 +47,7 @@ namespace HireTracker.Controllers
         [HttpGet]
         public IActionResult ForgotPassword()
         {
-            return View();
+            return View("~/Views/Account/ForgotPassword.cshtml");
         }
 
         [HttpPost]
@@ -117,7 +117,7 @@ namespace HireTracker.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {

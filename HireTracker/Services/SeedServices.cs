@@ -26,6 +26,7 @@ namespace HireTracker.Services
                 {
                     new { Email = config["SeedSettings:User1Email"], Password = config["SeedSettings:User1Password"]},
                     new { Email = config["SeedSettings:User2Email"], Password = config["SeedSettings:User2Password"]},
+                    new { Email = config["SeedSettings:User3Email"], Password = config["SeedSettings:User3Password"]}
                 };
 
                 foreach(var u in users)
