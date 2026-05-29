@@ -1,10 +1,13 @@
 ﻿using HireTracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace HireTracker.Controllers
 {
+    //Any unauthorized user trying to access any Booking page will be automatically redirected to the login page
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly AppDbContext _context;
