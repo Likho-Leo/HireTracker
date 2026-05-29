@@ -22,6 +22,10 @@ builder.Services.AddTransient<IResend, ResendClient>();
 //register _emailServices
 builder.Services.AddTransient<EmailServices>();
 
+//Register authentication middleware
+app.UseAuthentication();
+app.UseAuthorization();
+
 //Register DbContext, use sql server as db provider and pull connection string from appsettings.jason
 builder.Services.AddDbContext<AppDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
