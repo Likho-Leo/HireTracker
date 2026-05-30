@@ -1,83 +1,71 @@
 ﻿@model IEnumerable<HireTracker.Models.Booking>
-
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Bookings";
 }
 
-<div class="booking-header">
-	<h4 class="booking-title">Booking</h4>
-	<button class="new-booking">+ New booking</button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Bookings</h4>
+    <a asp-action="Create" class="btn btn-sm btn-new-booking">+ New booking</a>
 </div>
 
-<div class="booking-eyebrow">
-	<div>
-		<input type="text" id="searchCompanyRoute" class="form-control" placeholder="Search by company or route" onkeyup="searchTable()"/>
-	</div>
-
-	<div>
-		<select id="tripsFilter" class="form-select" w-auto>
-			<option value="All">All trips</option>
-			<option value="Completed">Completed trips</option>
-			<option value="Pending">Pendings trips</option>
-		</select>
-	</div>
-
-	<div>
-		<select id="paymentsFilter" class="form-select" w-auto>
-			<option value="All">All payments</option>
-			<option value="Completed">Completed payments</option>
-			<option value="Pending">Pendings payments</option>
-		</select>
-	</div>
-
-	<div>
-		<select id="dateRange" class="form-select" w-auto>
-			<option value="All">Date Range</option>
-			<option value="1">1 month</option>
-			<option value="2">3 months</option>
-		</select>
-	</div>
+<div class="d-flex gap-2 mb-3">
+    <input type="text" id="searchCompanyRoute" class="form-control form-control-sm" placeholder="Search by company or route" onkeyup="searchTable()" />
+    <select id="tripsFilter" class="form-select form-select-sm w-auto">
+        <option value="All">All trips</option>
+        <option value="Completed">Completed</option>
+        <option value="Pending">Pending</option>
+    </select>
+    <select id="paymentsFilter" class="form-select form-select-sm w-auto">
+        <option value="All">All payments</option>
+        <option value="Paid">Paid</option>
+        <option value="Owing">Owing</option>
+        <option value="Partial">Partial</option>
+    </select>
+    <select id="dateRange" class="form-select form-select-sm w-auto">
+        <option value="All">Date range</option>
+        <option value="1">1 month</option>
+        <option value="3">3 months</option>
+    </select>
 </div>
 
-<div class="container">
-	<div>
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Date</th>
-					<th>Route</th>
-					<th>Company</th>
-					<th>Vehicle</th>
-					<th>Passangers</th>
-					<th>Amount Due</th>
-					<th>Amount Paid</th>
-					<th>Trip</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach(var item in Model)
-				{
-					<tr>
-						<td>@Html.DisplayFor(modelItem => item.Date)</td>
-						<td>@item.Pickup -> @item.Dropoff</td>
-						<td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
-						<td>@Html.DisplayFor(modelItem => item.Vehicle)</td>
-						<td>@Html.DisplayFor(modelItem => item.Passengers)</td>
-						<td>@Html.DisplayFor(modelItem => item.AmountDue)</td>
-						<td>@Html.DisplayFor(modelItem => item.AmountPaid)</td>
-						<td>@Html.DisplayFor(modelItem => item.TripStatus)</td>
-						<td>
-							<a asp-action="Details" asp-route-id="@item.BookingId">View</a>
-							<a asp-action="Edit" asp-route-id="@item.BookingId">Edit</a>
-							<a asp-action="Delete" asp-route-id="@item.BookingId">Delete</a>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-	
+<div class="table-card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr style="border-bottom: 1px solid #E0E0E0;">
+                    <th>Date</th>
+                    <th>Route</th>
+                    <th>Company</th>
+                    <th>Vehicle</th>
+                    <th>Passengers</th>
+                    <th>Amount Due</th>
+                    <th>Amount Paid</th>
+                    <th>Payment</th>
+                    <th>Trip</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Date.ToString("dd MMM yyyy")</td>
+                        <td>@item.Pickup → @item.Dropoff</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.Vehicle</td>
+                        <td>@item.Passengers</td>
+                        <td>R @item.AmountDue.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        <td>R @item.AmountPaid.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        <td><span class="badge-@item.PaymentStatus?.ToLower()">@item.PaymentStatus</span></td>
+                        <td><span class="badge-@item.TripStatus.ToLower()">@item.TripStatus</span></td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-sm btn-view">View</a>
+                            <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-sm btn-edit">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-sm btn-delete">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
-
-

@@ -22,6 +22,7 @@ body {
     background-color: #F5F5F5;
 }
 
+/*Navbar settings*/
 .nav-link.active {
     color: #378ADD !important;
     border-bottom: 2px solid #378ADD;
@@ -49,4 +50,89 @@ body {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+}
+
+/* Buttons */
+.btn-new-booking {
+    background-color: #E6F1FB;
+    border: 1px solid #378ADD;
+    color: #378ADD;
+}
+
+.btn-view {
+    background-color: #F5F5F5;
+    border: 1px solid #E0E0E0;
+    color: #888780;
+}
+
+    .btn-view:hover {
+        background-color: #E0E0E0;
+    }
+
+.btn-edit {
+    background-color: #E6F1FB;
+    border: 1px solid #378ADD;
+    color: #378ADD;
+}
+
+.btn-delete {
+    background-color: #FCEBEB;
+    border: 1px solid #E24B4A;
+    color: #A32D2D;
+}
+
+/* Table card */
+.table-card {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Table headers */
+.table thead th {
+    color: #888780;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.badge-pending {
+    background-color: #E6F1FB;
+    color: #185FA5;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.badge-complete {
+    background-color: #EAF3DE;
+    color: #3B6D11;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.badge-paid {
+    background-color: #EAF3DE;
+    color: #3B6D11;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.badge-owing {
+    background-color: #FCEBEB;
+    color: #A32D2D;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.badge-partial {
+    background-color: #FAEEDA;
+    color: #854F0B;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 14px;
 }
