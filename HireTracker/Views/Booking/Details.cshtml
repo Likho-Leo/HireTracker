@@ -13,19 +13,19 @@
     <hr class="mt-0 mb-3" />
     <div class="row mb-4">
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Date</p>
+            <p class="detail-label">Date</p>
             <p>@Model.Date.ToString("dd MMM yyyy")</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Vehicle</p>
+            <p class="detail-label">Vehicle</p>
             <p>@Model.Vehicle</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Route</p>
+            <p class="detail-label">Route</p>
             <p>@Model.Pickup → @Model.Dropoff</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Trip Status</p>
+            <p class="detail-label">Trip Status</p>
             <p><span class="badge-@Model.TripStatus?.ToLower()">@Model.TripStatus</span></p>
         </div>
     </div>
@@ -34,11 +34,11 @@
     <hr class="mt-0 mb-3" />
     <div class="row mb-4">
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Company Name</p>
+            <p class="detail-label">Company Name</p>
             <p>@Model.CompanyName</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Contact Number</p>
+            <p class="detail-label">Contact Number</p>
             <p>@Model.ContactNumber</p>
         </div>
     </div>
@@ -47,27 +47,27 @@
     <hr class="mt-0 mb-3" />
     <div class="row mb-4">
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Passengers</p>
+            <p class="detail-label">Passengers</p>
             <p>@Model.Passengers</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Price Per Head</p>
+            <p class="detail-label">Price Per Head</p>
             <p>R @Model.PricePerhead.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Amount Due</p>
+            <p class="detail-label">Amount Due</p>
             <p>R @Model.AmountDue.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Amount Paid</p>
+            <p class="detail-label">Amount Paid</p>
             <p>R @Model.AmountPaid.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Payment Status</p>
+            <p class="detail-label">Payment Status</p>
             <p><span class="badge-@Model.PaymentStatus?.ToLower()">@Model.PaymentStatus</span></p>
         </div>
         <div class="col-md-6">
-            <p class="text-muted mb-1" style="font-size:14px;">Created At</p>
+            <p class="detail-label">Created At</p>
             <p>@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</p>
         </div>
     </div>
