@@ -1,4 +1,7 @@
-﻿@model IEnumerable<HireTracker.Models.Booking>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<HireTracker.Models.Booking>
+
 @{
     ViewData["Title"] = "Bookings";
 }
@@ -70,5 +73,17 @@
                 }
             </tbody>
         </table>
+        <div class="d-flex justify-content-between align-items-center p-3 border-top">
+            <span class="text-muted" style="font-size:13px;">
+                Showing @Model.FirstItemOnPage - @Model.LastItemOnPage of @Model.TotalItemCount bookings
+            </span>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new {
+            page,
+            search = ViewBag.Search,
+            tripStatus = ViewBag.TripStatus,
+            paymentStatus = ViewBag.PaymentStatus,
+            dateRange = ViewBag.DateRange
+                        }))
+        </div>
     </div>
 </div>

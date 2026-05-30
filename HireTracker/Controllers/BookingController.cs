@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList.Extensions;
+using X.PagedList;
 
 namespace HireTracker.Controllers
 {
@@ -15,8 +17,10 @@ namespace HireTracker.Controllers
         public BookingController(AppDbContext context) => _context = context;
 
         //ASP.NET automatically reads 'search', 'tripStaus', and 'paymentStatus' from the URL query strign.
-        public async Task<IActionResult> Index(string search, string tripStatus, string paymentStatus, int? dateRange)
+        public IActionResult Index(string search, string tripStatus, string paymentStatus, int? dateRange, int page = 1)
         {
+            int pageSize = 10;
+
             //This doesn't hit the db yet, just builds a query. EF waits until 'ToListAsync()' is called
             var bookings = _context.Bookings.Where(b => !b.IsDeleted);
 
@@ -55,8 +59,11 @@ namespace HireTracker.Controllers
             ViewBag.PaymentStatus = paymentStatus;
             ViewBag.DateRange = dateRange;
 
-            //execute query. Only now does EF hit the db, with all filter combined into one efficient SQL query.
-            return View(await bookings.OrderByDescending(b => b.CreatedAt).ToListAsync());
+            var pagedBookings = bookings
+                .OrderByDescending(b => b.CreatedAt)
+                .ToPagedList(page, pageSize);
+
+            return View(pagedBookings);
         }
 
         //Redirects to the create booking/ new booking view
