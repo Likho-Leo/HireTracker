@@ -4,122 +4,141 @@
 	ViewData["Title"] = "Edit booking";
 }
 
-<div class="Edit-header">
-	<div>
-		<a asp-action="Index" class="btn">Back</a>
-		<h4>Edit Bookings</h4>
-	</div>
-
-	<div class="create-container">
-
-		<form asp-action="Edit" method="post" asp-antiforgery="true">
-			<div>
-				<h6 class="section-header">TRIP DETAILS</h6>
-				<hr />
-			</div>
-
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input asp-for="BookingId" type="hidden" class="form-control" />
-
-			<label asp-for="Date" class="form-label">Date</label>
-			<input asp-for="Date" type="date" class="form-control" id="date" placeholder="Select date" />
-			<span class="text-danger" asp-validation-for="Date"></span>
-
-			<label asp-for="Vehicle" class="form-label">Vehicle</label>
-			<select asp-for="Vehicle" class="form-select">
-				<option value="">Select vehicle</option>
-				<option value="15 seater">15 seater</option>
-				<option value="22 seater">22 seater</option>
-				<option value="65 seater">65 seater</option>
-			</select>
-
-			<label asp-for="Pickup" class="form-label">Pickup location</label>
-			<input asp-for="Pickup" type="text" class="form-control" id="pickup" placeholder="Enter pickup location" />
-			<span class="text-danger" asp-validation-for="Pickup"></span>
-
-			<label asp-for="Dropoff" class="form-label">Dropoff location</label>
-			<input asp-for="Dropoff" type="text" class="form-control" id="dropoff" placeholder="Enter dropoff location" />
-			<span class="text-danger" asp-validation-for="Dropoff"></span>
-
-			<label asp-for="TripStatus" class="form-label">Trip status</label>
-			<select asp-for="TripStatus" class="form-select" w-auto>
-				<option value="">Select trip status</option>
-				<option value="Completed">Completed</option>
-				<option value="Pending">Pendings</option>
-			</select>
-			<span class="text-danger" asp-validation-for="TripStatus"></span>
-
-			<div>
-				<h6 class="section-header">CLIENT DETAILS</h6>
-				<hr />
-			</div>
-
-			<label asp-for="CompanyName" class="form-label">Company name</label>
-			<input asp-for="CompanyName" type="text" class="form-control" id="companyName" placeholder="Enter company name" />
-			<span class="text-danger" asp-validation-for="CompanyName"></span>
-
-			<label asp-for="ContactNumber" class="form-label">Contact number</label>
-			<input asp-for="ContactNumber" type="text" class="form-control" id="contactNumber" placeholder="Enter company number" />
-			<span class="text-danger" asp-validation-for="ContactNumber"></span>
-
-			<div>
-				<h6 class="section-header">PAYMENT DETAILS</h6>
-				<hr />
-			</div>
-
-			<label asp-for="Passengers" class="form-label">Number of passangers</label>
-			<input asp-for="Passengers" type="number" class="form-control" id="passengers" placeholder="e.g. 15" />
-			<span class="text-danger" asp-validation-for="Passengers"></span>
-
-			<label asp-for="PricePerhead" class="form-label">Price per head (R)</label>
-			<input asp-for="PricePerhead" type="number" class="form-control" id="pricePerhead" placeholder="e.g. 50" />
-			<span class="text-danger" asp-validation-for="PricePerhead"></span>
-
-			<label asp-for="AmountPaid" class="form-label">Amount paid (R)</label>
-			<input asp-for="AmountPaid" type="number" class="form-control" id="amountPaid" placeholder="e.g. 0" />
-			<span class="text-danger" asp-validation-for="AmountPaid"></span>
-
-			<label asp-for="PaymentStatus" class="form-label">Payment status</label>
-			<select asp-for="PaymentStatus" class="form-select" w-auto>
-				<option value="">Select Payment status</option>
-				<option value="Paid">Paid</option>
-				<option value="Partial">Partial</option>
-				<option value="Owing">Owing</option>
-			</select>
-			<span class="text-danger" asp-validation-for="PaymentStatus"></span>
-
-			<div class="container-footer">
-				<label asp-for="AmountDue" class="form-label">Amount Due (auto calculated)</label>
-				<span id="amountDue">R0.00</span>
-			</div>
-
-			@*
-				TempData is dictionery that stores data temporarily between 2 request
-				Controller sets the message 'Booking successfully updated'
-				User gets redirected to another page 
-				Page reads and displays the message
-				After that it's automatically cleared'
-			*@
-			@if(TempData["msg"] != null)
-			{
-				<div class="alert alert-info">
-					@TempData["msg"]
-				</div>
-			}
-
-			<div class="form-group">
-				<input type="submit" value="Update" class="btn" />
-				<a asp-action="Index" class="btn">Cancel</a>
-			</div>
-		</form>
-	</div>
+<div class="d-flex align-items-center gap-2 mb-3">
+    <a asp-action="Index" class="btn btn-sm btn-cancel">← Back</a>
+    <h4 class="mb-0">Edit Booking</h4>
 </div>
 
-@*
-	'_ValidationScriptsPartial' loads the client side validation scripts that make the '[Required]' annotations work in the browser without hitting the server.
-*@
+<div class="form-card">
+    <form asp-action="Edit" method="post" asp-antiforgery="true">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <p class="form-section-title">TRIP DETAILS</p>
+        <hr class="mt-0 mb-3" />
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <input type="hidden" asp-for="BookingId" />
+                <label asp-for="Date" class="form-label">Date</label>
+                <input asp-for="Date" type="date" class="form-control" />
+                <span class="text-danger" asp-validation-for="Date"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Vehicle" class="form-label">Vehicle</label>
+                <select asp-for="Vehicle" class="form-select">
+                    <option value="">Select vehicle</option>
+                    <option value="15 seater">15 seater</option>
+                    <option value="22 seater">22 seater</option>
+                    <option value="65 seater">65 seater</option>
+                </select>
+                <span class="text-danger" asp-validation-for="Vehicle"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Pickup" class="form-label">Pickup location</label>
+                <input asp-for="Pickup" type="text" class="form-control" placeholder="Enter pickup location" />
+                <span class="text-danger" asp-validation-for="Pickup"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Dropoff" class="form-label">Drop off location</label>
+                <input asp-for="Dropoff" type="text" class="form-control" placeholder="Enter drop off location" />
+                <span class="text-danger" asp-validation-for="Dropoff"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="TripStatus" class="form-label">Trip status</label>
+                <select asp-for="TripStatus" class="form-select">
+                    <option value="">Select trip status</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Pending">Pending</option>
+                </select>
+                <span class="text-danger" asp-validation-for="TripStatus"></span>
+            </div>
+        </div>
+
+        <p class="form-section-title">CLIENT DETAILS</p>
+        <hr class="mt-0 mb-3" />
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label asp-for="CompanyName" class="form-label">Company name</label>
+                <input asp-for="CompanyName" type="text" class="form-control" placeholder="Enter company name" />
+                <span class="text-danger" asp-validation-for="CompanyName"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="ContactNumber" class="form-label">Contact number</label>
+                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="Enter contact number" />
+                <span class="text-danger" asp-validation-for="ContactNumber"></span>
+            </div>
+        </div>
+
+        <p class="form-section-title">PAYMENT DETAILS</p>
+        <hr class="mt-0 mb-3" />
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label asp-for="Passengers" class="form-label">Number of passengers</label>
+                <input asp-for="Passengers" type="number" class="form-control" placeholder="e.g. 15" id="passengers" />
+                <span class="text-danger" asp-validation-for="Passengers"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="PricePerhead" class="form-label">Price per head (R)</label>
+                <input asp-for="PricePerhead" type="number" class="form-control" placeholder="e.g. 50" id="pricePerHead" />
+                <span class="text-danger" asp-validation-for="PricePerhead"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="AmountPaid" class="form-label">Amount paid (R)</label>
+                <input asp-for="AmountPaid" type="number" class="form-control" placeholder="e.g. 0" />
+                <span class="text-danger" asp-validation-for="AmountPaid"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="PaymentStatus" class="form-label">Payment status</label>
+                <select asp-for="PaymentStatus" class="form-select">
+                    <option value="">Select payment status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Partial">Partial</option>
+                    <option value="Owing">Owing</option>
+                </select>
+                <span class="text-danger" asp-validation-for="PaymentStatus"></span>
+            </div>
+        </div>
+
+        <div class="container-footer">
+            <label class="form-label mb-0">Amount Due (auto calculated)</label>
+            <span id="amountDue"><strong>R 0.00</strong></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <a asp-action="Index" class="btn btn-cancel">Cancel</a>
+            <input type="submit" value="Update" class="btn btn-save" />
+        </div>
+    </form>
+</div>
+
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        //define reusable function
+        function calculateAmountDue() {
+            /**
+             * document.getElementById() finds input field by id
+             * .value gets the input value
+             * parseFloat() converts the text value to a decimal number
+             * || 0 defaults to a 0 instead of NaN
+             */
+
+            const passengers = parseFloat(document.getElementById('passengers').value) || 0;
+            const pricePerHead = parseFloat(document.getElementById('pricePerHead').value) || 0;
+            const amountDue = passengers * pricePerHead;
+
+            //Find amount due by its span id and format to 2 decimal places
+            document.getElementById('amountDue').innerHTML = '<strong>R ' + amountDue.toFixed(2) + '</strong>';
+        }
+
+        //listen for any change in the input field
+        document.getElementById('passengers').addEventListener('input', calculateAmountDue);
+        document.getElementById('pricePerHead').addEventListener('input', calculateAmountDue);
+
+        //fires calculation as soon as page finishes loading
+        document.addEventListener('DOMContentLoaded', calculateAmountDue);
+    </script>
 }
