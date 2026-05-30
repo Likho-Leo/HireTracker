@@ -5,28 +5,31 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Bookings</h4>
-    <a asp-action="Create" class="btn btn-sm btn-new-booking">+ New booking</a>
+    <a asp-action="Create" class="btn btn-new-booking">+ New booking</a>
 </div>
 
-<div class="d-flex gap-2 mb-3">
-    <input type="text" id="searchCompanyRoute" class="form-control form-control-sm" placeholder="Search by company or route" onkeyup="searchTable()" />
-    <select id="tripsFilter" class="form-select form-select-sm w-auto">
-        <option value="All">All trips</option>
-        <option value="Completed">Completed</option>
-        <option value="Pending">Pending</option>
+<form method="get" asp-action="Index" class="d-flex gap-2 mb-3">
+    <input type="text" name="search" value="@ViewBag.Search" class="form-control"  placeholder="Search by company or route" />
+    <select name="tripStatus" class="form-select w-auto">
+        <option value="All" selected="@(ViewBag.TripStatus == "All" || ViewBag.TripStatus == null)">All trips</option>
+        <option value="Pending" selected="@(ViewBag.TripStatus == "Pending")">Pending</option>
+        <option value="Completed" selected="@(ViewBag.TripStatus == "Completed")">Completed</option>
     </select>
-    <select id="paymentsFilter" class="form-select form-select-sm w-auto">
-        <option value="All">All payments</option>
-        <option value="Paid">Paid</option>
-        <option value="Owing">Owing</option>
-        <option value="Partial">Partial</option>
+    <select name="paymentStatus" class="form-select w-auto">
+        <option value="All" selected="@(ViewBag.PaymentStatus == "All" || ViewBag.PaymentStatus == null)">All payments</option>
+        <option value="Paid" selected="@(ViewBag.PaymentStatus == "Paid")">Paid</option>
+        <option value="Owing" selected="@(ViewBag.PaymentStatus == "Owing")">Owing</option>
+        <option value="Partial" selected="@(ViewBag.PaymentStatus == "Partial")">Partial</option>
     </select>
-    <select id="dateRange" class="form-select form-select-sm w-auto">
-        <option value="All">Date range</option>
-        <option value="1">1 month</option>
-        <option value="3">3 months</option>
+    <select name="dateRange" class="form-select w-auto">
+        <option value="">All time</option>
+        <option value="1" selected="@(ViewBag.DateRange == 1)">Last 1 month</option>
+        <option value="3" selected="@(ViewBag.DateRange == 3)">Last 3 months</option>
+        <option value="6" selected="@(ViewBag.DateRange == 6)">Last 6 months</option>
     </select>
-</div>
+    <button type="submit" class="btn btn-new-booking">Search</button>
+    <a asp-action="Index" class="btn btn-cancel">Clear</a>
+</form>
 
 <div class="table-card">
     <div class="card-body p-0">

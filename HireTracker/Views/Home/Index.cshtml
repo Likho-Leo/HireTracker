@@ -1,3 +1,67 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<HireTracker.Models.Booking>
+@{
+    ViewData["Title"] = "Dashboard";
 }
+
+<h4 class="mb-3">Dashboard</h4>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <p class="detail-label">Total bookings</p>
+            <p class="stat-value text-info">@ViewBag.TotalBookings</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <p class="detail-label">Pending trips</p>
+            <p class="stat-value text-warning">@ViewBag.PendingTrips</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <p class="detail-label">Completed trips</p>
+            <p class="stat-value text-success">@ViewBag.CompletedTrips</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <p class="detail-label">Outstanding payments</p>
+            <p class="stat-value text-danger">R @ViewBag.OutstandingPayments.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
+        </div>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <span class="fw-500">Recent bookings</span>
+        <a asp-controller="Booking" asp-action="Create" class="btn btn-sm btn-new-booking">+ New booking</a>
+    </div>
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Route</th>
+                <th>Company</th>
+                <th>Vehicle</th>
+                <th>Amount Due</th>
+                <th>Payment</th>
+                <th>Trip</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Date.ToString("dd MMM yyyy")</td>
+                    <td>@item.Pickup → @item.Dropoff</td>
+                    <td>@item.CompanyName</td>
+                    <td>@item.Vehicle</td>
+                    <td>R @item.AmountDue.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td><span class="badge-@item.PaymentStatus?.ToLower()">@item.PaymentStatus</span></td>
+                    <td><span class="badge-@item.TripStatus?.ToLower()">@item.TripStatus</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

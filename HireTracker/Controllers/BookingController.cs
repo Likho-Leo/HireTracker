@@ -14,13 +14,49 @@ namespace HireTracker.Controllers
 
         public BookingController(AppDbContext context) => _context = context;
 
-        //Returns booking records from the db
-        //async/await methods for db calls so app doesn't freeze while waiting for data
-        public async Task<IActionResult> Index()
+        //ASP.NET automatically reads 'search', 'tripStaus', and 'paymentStatus' from the URL query strign.
+        public async Task<IActionResult> Index(string search, string tripStatus, string paymentStatus, int? dateRange)
         {
-            return View(await _context.Bookings
-                .Where(m => !m.IsDeleted)
-                .ToListAsync());        //filter out deleted records
+            //This doesn't hit the db yet, just builds a query. EF waits until 'ToListAsync()' is called
+            var bookings = _context.Bookings.Where(b => !b.IsDeleted);
+
+            //add search filter
+            if (!string.IsNullOrEmpty(search))
+            {
+                bookings = bookings.Where(b =>
+                    b.CompanyName.Contains(search) ||
+                    b.Pickup.Contains(search) ||
+                    b.Dropoff.Contains(search));
+            }
+
+            //add trip status filter
+            if (!string.IsNullOrEmpty(tripStatus) && tripStatus != "All")
+            {
+                bookings = bookings.Where(b => b.TripStatus == tripStatus);
+            }
+
+            //add payment status filter
+            if (!string.IsNullOrEmpty(paymentStatus) && paymentStatus != "All")
+            {
+                bookings = bookings.Where(b => b.PaymentStatus == paymentStatus);
+            }
+            
+            //add date range filter
+            if (dateRange.HasValue)
+            {
+                var fromDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-dateRange.Value));
+                bookings = bookings.Where(b => b.Date >= fromDate);
+            }
+
+            //store values in view bag.
+            //this passes current filter back to view so the searchbox and dropdowns stay filled in after the page reloads
+            ViewBag.Search = search;
+            ViewBag.TripStatus = tripStatus;
+            ViewBag.PaymentStatus = paymentStatus;
+            ViewBag.DateRange = dateRange;
+
+            //execute query. Only now does EF hit the db, with all filter combined into one efficient SQL query.
+            return View(await bookings.OrderByDescending(b => b.CreatedAt).ToListAsync());
         }
 
         //Redirects to the create booking/ new booking view

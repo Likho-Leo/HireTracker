@@ -183,3 +183,16 @@ body {
     color: #888780;
     margin-bottom: 4px;
 }
+
+.stat-card {
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.stat-value {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+}
