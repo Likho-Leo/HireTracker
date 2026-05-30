@@ -20,7 +20,7 @@ namespace HireTracker.Services
             message.From = "onboarding@resend.dev";
             message.To.Add(toEmail);
             message.Subject = "Reset your HireTracker password";
-            message.HtmlBody = $@"\
+            message.HtmlBody = $@"
                 <h3>Password Reset Request</h3>
                 <p>Click the link below to reset your password:</p>
                 <a href='{resetLink}'>Reset Password</a>
