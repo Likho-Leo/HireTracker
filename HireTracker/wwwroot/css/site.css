@@ -18,5 +18,35 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #F5F5F5;
+}
+
+.nav-link.active {
+    color: #378ADD !important;
+    border-bottom: 2px solid #378ADD;
+}
+
+.nav-link {
+    color: #888780 !important;
+}
+
+.navbar-brand {
+    color: #1A1A1A !important;
+}
+
+.navbar {
+    height: 52px;
+}
+
+.navbar-collapse {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-nav.mx-auto {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
