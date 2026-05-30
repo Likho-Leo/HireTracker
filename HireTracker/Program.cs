@@ -37,6 +37,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     //ennables token generation for password reset email
     .AddDefaultTokenProviders();
 
+//Sets token to expire in 1hr
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromHours(1);
+});
+
 var app = builder.Build();
 
 //Register seed service
