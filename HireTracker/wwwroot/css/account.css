@@ -28,12 +28,28 @@
         z-index: 1;
     }
 
-.account-box {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    max-width: 500px;
-    width: 100%;
-    opacity: .9;
+    .account-box {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        max-width: 500px;
+        width: 100%;
+        opacity: .9;
+    }
+
+.btn-primary {
+    background-color:#378ADD;
+    border-color: #378ADD;
 }
+
+    .btn-primary:hover {
+        background-color: #2b6db3;
+        border-color: #2b6db3;
+    }
+
+    .btn-primary:focus, .btn-primary:active{
+        background-color: #2b6db3;
+        border-color: #2b6db3;
+        box-shadow: 0 0 0 0.2rem rgba(55, 138, 221, 0.5);
+    }
