@@ -80,20 +80,30 @@
                 <input asp-for="PricePerhead" type="number" class="form-control" placeholder="e.g. 50" id="pricePerHead" />
                 <span class="text-danger" asp-validation-for="PricePerhead"></span>
             </div>
-            <div class="col-md-6">
-                <label asp-for="AmountPaid" class="form-label">Amount paid (R)</label>
-                <input asp-for="AmountPaid" type="number" class="form-control" placeholder="e.g. 0" />
-                <span class="text-danger" asp-validation-for="AmountPaid"></span>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="notYetPaid" checked/>
+                    <label class="form-check-label" for="notYetPaid">Not yet paid</label>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label asp-for="PaymentStatus" class="form-label">Payment status</label>
-                <select asp-for="PaymentStatus" class="form-select">
-                    <option value="">Select payment status</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Partial">Partial</option>
-                    <option value="Owing">Owing</option>
-                </select>
-                <span class="text-danger" asp-validation-for="PaymentStatus"></span>
+            <div id="paymentFields">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="AmountPaid" class="form-label">Amount paid (R)</label>
+                        <input asp-for="AmountPaid" type="number" class="form-control" placeholder="e.g. 0" id="AmountPaid" />
+                        <span class="text-danger" asp-validation-for="AmountPaid"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="PaymentStatus" class="form-label">Payment status</label>
+                        <select asp-for="PaymentStatus" class="form-select" id="PaymentStatus">
+                            <option value="">Select payment status</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Partial">Partial</option>
+                            <option value="Owing">Owing</option>
+                        </select>
+                        <span class="text-danger" asp-validation-for="PaymentStatus"></span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -127,13 +137,51 @@
             const passengers = parseFloat(document.getElementById('passengers').value) || 0;
             const pricePerHead = parseFloat(document.getElementById('pricePerHead').value) || 0;
             const amountDue = passengers * pricePerHead;
+            const amountPaid = parseFloat(document.getElementById('AmountPaid').value) || 0;
 
             //Find amount due by its span id and format to 2 decimal places
             document.getElementById('amountDue').innerHTML = '<strong>R ' + amountDue.toFixed(2) + '</strong>';
+
+            //Auto set payment status
+            if (!document.getElementById('notYetPaid').checked){
+                const paymentStatus = document.getElementById('PaymentStatus');
+                if(amountPaid >= amountDue && amountDue > 0){
+                    payemntStatus.value = 'Paid';
+                } else if(amountPaid > 0 && amountPaid < amountDue){
+                    payemntStatus.value = 'Partial';
+                } else{
+                    paymentStatus.value = 'Owing';
+                }
+            }
         }
+
+        document.getElementById('AmountPaid').addEventListener('input', calculateAmountDue);
 
         //listen for any change in the input field
         document.getElementById('passengers').addEventListener('input', calculateAmountDue);
         document.getElementById('pricePerHead').addEventListener('input', calculateAmountDue);
+
+        const checkbox = document.getElementById('notYetPaid');
+        const paymentFields = document.getElementById('paymentFields');
+        const amountPaid = document.getElementById('AmountPaid');
+        const paymentStatus = document.getElementById('PaymentStatus');
+
+        function togglePaymentFields() {
+            if(checkbox.checked){
+                paymentFields.style.display = 'none';
+                amountPaid.value = 0;
+                paymentStatus.value = 'Owing';
+            } else{
+                paymentFields.style.display = 'block';
+                amountPaid.value = '';
+                paymentStatus.value = '';
+            }
+        }
+
+        //run on page load
+         togglePaymentFields();
+
+         //run when chaeckbox changes
+         checkbox.addEventListener('change', togglePaymentFields);
     </script>
 }
