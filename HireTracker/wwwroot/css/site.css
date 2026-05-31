@@ -106,7 +106,7 @@ body {
     font-size: 14px;
 }
 
-.badge-complete {
+.badge-completed {
     background-color: #EAF3DE;
     color: #3B6D11;
     padding: 3px 8px;
@@ -196,3 +196,30 @@ body {
     font-weight: 500;
     margin: 0;
 }
+
+.pagination {
+    margin: 0;
+}
+
+    .pagination li a, .pagination li span {
+        color: #888780;
+        text-decoration: none;
+        border: 1px solid #E0E0E0;
+        border-radius: 4px !important;
+        font-size: 13px;
+        padding: 4px 10px;
+        margin:2px;
+    }
+
+    .pagination li.active a, .pagination li.active span {
+        text-decoration:underline;
+        background-color: #E6F1FB;
+        border-color: #378ADD;
+        color: #378ADD;
+    }
+
+    .pagination li a:hover {
+        background-color: #F5F5F5;
+        color: #1A1A1A;
+        border-color: #E0E0E0;
+    }
