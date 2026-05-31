@@ -223,3 +223,15 @@ body {
         color: #1A1A1A;
         border-color: #E0E0E0;
     }
+
+.btn-logout {
+    border: 1px solid #E0E0E0;
+    padding: 4px 10px !important;
+    color: #888780;
+    border-radius: 4px;
+}
+
+    .btn-logout:hover {
+        background-color: #F5F5F5;
+        color: #1A1A1A;
+    }

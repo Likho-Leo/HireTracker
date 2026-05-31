@@ -10,7 +10,7 @@
         <li class="nav-item">
             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-link nav-link p-0">Logout</button>
+                <button type="submit" class="btn btn-logout">Logout</button>
             </form>
         </li>
     }
