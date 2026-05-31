@@ -95,12 +95,13 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="PaymentStatus" class="form-label">Payment status</label>
-                        <select asp-for="PaymentStatus" class="form-select" id="PaymentStatus">
+                        <select asp-for="PaymentStatus" class="form-select" id="PaymentStatus" disabled>
                             <option value="">Select payment status</option>
                             <option value="Paid">Paid</option>
                             <option value="Partial">Partial</option>
                             <option value="Owing">Owing</option>
                         </select>
+                        <input type="hidden" asp-for="PaymentStatus" id="PaymentStatusHidden" />
                         <span class="text-danger" asp-validation-for="PaymentStatus"></span>
                     </div>
                 </div>
@@ -143,15 +144,17 @@
             document.getElementById('amountDue').innerHTML = '<strong>R ' + amountDue.toFixed(2) + '</strong>';
 
             //Auto set payment status
-            if (!document.getElementById('notYetPaid').checked){
+            if (!document.getElementById('notYetPaid').checked) {
                 const paymentStatus = document.getElementById('PaymentStatus');
-                if(amountPaid >= amountDue && amountDue > 0){
-                    payemntStatus.value = 'Paid';
-                } else if(amountPaid > 0 && amountPaid < amountDue){
-                    payemntStatus.value = 'Partial';
+                const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
+                if(amountPaid >= amountDue && amountDue > 0) {
+                    paymentStatus.value = 'Paid';
+                } else if(amountPaid > 0 && amountPaid < amountDue) {
+                    paymentStatus.value = 'Partial';
                 } else{
                     paymentStatus.value = 'Owing';
                 }
+                paymentStatusHidden.value = paymentStatus.value;
             }
         }
 
