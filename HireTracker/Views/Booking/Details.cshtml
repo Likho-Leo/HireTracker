@@ -63,6 +63,10 @@
             <p>R @Model.AmountPaid.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
         </div>
         <div class="col-md-6">
+            <p class="detail-label">Outstanding Payment</p>
+            <p>R @((Model.AmountDue - Model.AmountPaid).ToString("N2", System.Globalization.CultureInfo.InvariantCulture))</p>
+        </div>
+        <div class="col-md-6">
             <p class="detail-label">Payment Status</p>
             <p><span class="badge-@Model.PaymentStatus?.ToLower()">@Model.PaymentStatus</span></p>
         </div>
