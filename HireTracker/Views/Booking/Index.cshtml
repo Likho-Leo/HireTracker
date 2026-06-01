@@ -45,7 +45,8 @@
                     <th>Vehicle</th>
                     <th>Passengers</th>
                     <th>Amount Due</th>
-                    <th>Amount Paid</th>
+                    @* <th>Amount Paid</th> *@
+                    <th>Outstanding</th>
                     <th>Payment</th>
                     <th>Trip</th>
                     <th>Actions</th>
@@ -61,7 +62,8 @@
                         <td>@item.Vehicle</td>
                         <td>@item.Passengers</td>
                         <td>R @item.AmountDue.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td>
-                        <td>R @item.AmountPaid.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td>
+                        @* <td>R @item.AmountPaid.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td> *@
+                        <td>R @((item.AmountDue - item.AmountPaid).ToString("N2", System.Globalization.CultureInfo.InvariantCulture))</td>
                         <td><span class="badge-@item.PaymentStatus?.ToLower()">@item.PaymentStatus</span></td>
                         <td><span class="badge-@item.TripStatus.ToLower()">@item.TripStatus</span></td>
                         <td>

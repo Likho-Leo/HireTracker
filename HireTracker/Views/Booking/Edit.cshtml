@@ -139,7 +139,8 @@
             //Find amount due by its span id and format to 2 decimal places
             document.getElementById('amountDue').innerHTML = '<strong>R ' + amountDue.toFixed(2) + '</strong>';
 
-
+             const paymentStatus = document.getElementById('PaymentStatus');
+             const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
             //Auto set payment status
             if (amountPaid >= amountDue && amountDue > 0) {
                 paymentStatus.value = 'Paid';
