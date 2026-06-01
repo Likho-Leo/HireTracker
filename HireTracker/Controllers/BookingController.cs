@@ -118,8 +118,24 @@ namespace HireTracker.Controllers
             {
                 try
                 {
-                    booking.AmountDue = booking.Passengers * booking.PricePerhead;      //recalculate incase passangers or price per head changes
-                    _context.Update(booking);
+                    var existingBooking = await _context.Bookings.FindAsync(id);
+                    if (existingBooking == null) return NotFound();
+
+                    existingBooking.Date = booking.Date;
+                    existingBooking.Pickup = booking.Pickup;
+                    existingBooking.Dropoff = booking.Dropoff;
+                    existingBooking.Vehicle = booking.Vehicle;
+                    existingBooking.TripStatus = booking.TripStatus;
+                    existingBooking.CompanyName = booking.CompanyName;
+                    existingBooking.ContactNumber = booking.ContactNumber;
+                    existingBooking.Passengers = booking.Passengers;
+                    existingBooking.PricePerhead = booking.PricePerhead;
+                    existingBooking.AmountDue = booking.Passengers * booking.PricePerhead;
+                    existingBooking.AmountPaid = booking.AmountPaid;
+                    existingBooking.PaymentStatus = booking.PaymentStatus;
+                    existingBooking.UpdatedAt = DateTime.Now;
+
+                    _context.Update(existingBooking);
                     await _context.SaveChangesAsync();
                     TempData["msg"] = "Booking successfully updated!";
                     return RedirectToAction(nameof(Index));

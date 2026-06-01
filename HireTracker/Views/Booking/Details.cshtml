@@ -70,6 +70,13 @@
             <p class="detail-label">Created At</p>
             <p>@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</p>
         </div>
+        @if (Model.UpdatedAt.HasValue)
+        {
+            <div class="col-md-6">
+                <p class="detail-label">Last Updated</p>
+                <p>@Model.UpdatedAt.Value.ToString("dd MMM yyyy HH:mm")</p>
+            </div>
+        }
     </div>
 
     <div class="d-flex justify-content-end gap-2">

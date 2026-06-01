@@ -56,6 +56,9 @@ namespace HireTracker.Models
         [Display(Name = "Created At")]
         public DateTime CreatedAt { get; set; }
 
+        [Display(Name ="Updated At")]
+        public DateTime? UpdatedAt { get; set; }
+
         public bool IsDeleted { get; set; } = false;
     }
 }

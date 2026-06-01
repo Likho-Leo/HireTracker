@@ -75,6 +75,9 @@ namespace HireTracker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Vehicle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
