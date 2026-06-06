@@ -16,6 +16,13 @@
             <p class="detail-label">Date</p>
             <p>@Model.Date.ToString("dd MMM yyyy")</p>
         </div>
+        @if (Model.ReturnDate.HasValue)
+        {
+            <div class="col-md-6">
+                <p class="detail-label">Return Date</p>
+                <p>R @Model.ReturnDate?.ToString("dd MMM yyyy")</p>
+            </div>
+        }
         <div class="col-md-6">
             <p class="detail-label">Vehicle</p>
             <p>@Model.Vehicle</p>
@@ -49,10 +56,6 @@
         <div class="col-md-6">
             <p class="detail-label">Passengers</p>
             <p>@Model.Passengers</p>
-        </div>
-        <div class="col-md-6">
-            <p class="detail-label">Price Per Head</p>
-            <p>R @Model.PricePerhead.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</p>
         </div>
         <div class="col-md-6">
             <p class="detail-label">Amount Due</p>

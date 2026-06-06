@@ -22,6 +22,11 @@
                 <span class="text-danger" asp-validation-for="Date"></span>
             </div>
             <div class="col-md-6">
+                <label asp-for="ReturnDate" class="form-label">Return Date</label>
+                <input asp-for="ReturnDate" type="date" class="form-control" />
+                <span class="text-danger" asp-validation-for="ReturnDate"></span>
+            </div>
+            <div class="col-md-12">
                 <label asp-for="Vehicle" class="form-label">Vehicle</label>
                 <select asp-for="Vehicle" class="form-select">
                     <option value="">Select vehicle</option>
@@ -75,14 +80,10 @@
                 <input asp-for="Passengers" type="number" class="form-control" placeholder="e.g. 15" id="passengers" />
                 <span class="text-danger" asp-validation-for="Passengers"></span>
             </div>
-            <div class="col-md-6">
-                <label asp-for="PricePerhead" class="form-label">Price per head (R)</label>
-                <input asp-for="PricePerhead" type="number" class="form-control" placeholder="e.g. 50" id="pricePerHead" />
-                <span class="text-danger" asp-validation-for="PricePerhead"></span>
-            </div>
+            
             <div class="col-md-12">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="notYetPaid" checked/>
+                    <input type="checkbox" class="form-check-input" id="notYetPaid" checked />
                     <label class="form-check-label" for="notYetPaid">Not yet paid</label>
                 </div>
             </div>
@@ -104,13 +105,13 @@
                         <input type="hidden" asp-for="PaymentStatus" id="PaymentStatusHidden" />
                         <span class="text-danger" asp-validation-for="PaymentStatus"></span>
                     </div>
-                </div>
+                </div>  
             </div>
-        </div>
-
-        <div class="container-footer">
-            <label class="form-label mb-0">Amount Due (auto calculated)</label>
-            <span id="amountDue"><strong>R 0.00</strong></span>
+            <div class="col-md-6">
+                <label asp-for="AmountDue" class="form-label">Amount due (R)</label>
+                <input asp-for="AmountDue" type="number" class="form-control" placeholder="e.g. 1000" id="AmountDue" />
+                <span class="text-danger" asp-validation-for="AmountDue"></span>
+            </div>
         </div>
 
         <div class="d-flex justify-content-end gap-2">
@@ -126,65 +127,49 @@
     }
 
     <script>
-        //define reusable function
-        function calculateAmountDue() {
-            /**
-             * document.getElementById() finds input field by id
-             * .value gets the input value
-             * parseFloat() converts the text value to a decimal number
-             * || 0 defaults to a 0 instead of NaN
-             */
+        const checkbox = document.getElementById('notYetPaid');
+        const paymentFields = document.getElementById('paymentFields');
+        const amountPaidInput = document.getElementById('AmountPaid');
+        const paymentStatus = document.getElementById('PaymentStatus');
+        const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
 
-            const passengers = parseFloat(document.getElementById('passengers').value) || 0;
-            const pricePerHead = parseFloat(document.getElementById('pricePerHead').value) || 0;
-            const amountDue = passengers * pricePerHead;
-            const amountPaid = parseFloat(document.getElementById('AmountPaid').value) || 0;
+        function autoSetPaymentStatus() {
+            if (!checkbox.checked) {
+                const amountDue = parseFloat(document.getElementById('AmountDue').value) || 0;
+                const amountPaid = parseFloat(amountPaidInput.value) || 0;
 
-            //Find amount due by its span id and format to 2 decimal places
-            document.getElementById('amountDue').innerHTML = '<strong>R ' + amountDue.toFixed(2) + '</strong>';
-
-            //Auto set payment status
-            if (!document.getElementById('notYetPaid').checked) {
-                const paymentStatus = document.getElementById('PaymentStatus');
-                const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
-                if(amountPaid >= amountDue && amountDue > 0) {
+                if (amountPaid >= amountDue && amountDue > 0) {
                     paymentStatus.value = 'Paid';
-                } else if(amountPaid > 0 && amountPaid < amountDue) {
+                } else if (amountPaid > 0 && amountPaid < amountDue) {
                     paymentStatus.value = 'Partial';
-                } else{
+                } else {
                     paymentStatus.value = 'Owing';
                 }
                 paymentStatusHidden.value = paymentStatus.value;
             }
         }
 
-        document.getElementById('AmountPaid').addEventListener('input', calculateAmountDue);
-
-        //listen for any change in the input field
-        document.getElementById('passengers').addEventListener('input', calculateAmountDue);
-        document.getElementById('pricePerHead').addEventListener('input', calculateAmountDue);
-
-        const checkbox = document.getElementById('notYetPaid');
-        const paymentFields = document.getElementById('paymentFields');
-        const amountPaid = document.getElementById('AmountPaid');
-        const paymentStatus = document.getElementById('PaymentStatus');
-
         function togglePaymentFields() {
-            if(checkbox.checked){
+            if (checkbox.checked) {
                 paymentFields.style.display = 'none';
-                amountPaid.value = 0;
+                amountPaidInput.value = 0;
                 paymentStatus.value = 'Owing';
-            } else{
+                paymentStatusHidden.value = 'Owing';
+            } else {
                 paymentFields.style.display = 'block';
-                amountPaid.value = '';
+                amountPaidInput.value = '';
                 paymentStatus.value = '';
+                paymentStatusHidden.value = '';
             }
         }
 
-        //run on page load
-         togglePaymentFields();
+        // Event listeners
+        document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
+        document.getElementById('AmountPaid').addEventListener('input', autoSetPaymentStatus);
+        // document.getElementById('passengers').addEventListener('input', validatePassengers);
 
-         //run when chaeckbox changes
-         checkbox.addEventListener('change', togglePaymentFields);
+        // Run on page load
+        togglePaymentFields();
+        checkbox.addEventListener('change', togglePaymentFields);
     </script>
 }

@@ -68,8 +68,8 @@ namespace HireTracker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PricePerhead")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<DateOnly?>("ReturnDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("TripStatus")
                         .IsRequired()

@@ -24,6 +24,11 @@
                 <span class="text-danger" asp-validation-for="Date"></span>
             </div>
             <div class="col-md-6">
+                <label asp-for="ReturnDate" class="form-label">ReturnDate</label>
+                <input asp-for="ReturnDate" type="date" class="form-control" />
+                <span class="text-danger" asp-validation-for="ReturnDate"></span>
+            </div>
+            <div class="col-md-6">
                 <label asp-for="Vehicle" class="form-label">Vehicle</label>
                 <select asp-for="Vehicle" class="form-select">
                     <option value="">Select vehicle</option>
@@ -76,12 +81,7 @@
                 <label asp-for="Passengers" class="form-label">Number of passengers</label>
                 <input asp-for="Passengers" type="number" class="form-control" placeholder="e.g. 15" id="passengers" />
                 <span class="text-danger" asp-validation-for="Passengers"></span>
-            </div>
-            <div class="col-md-6">
-                <label asp-for="PricePerhead" class="form-label">Price per head (R)</label>
-                <input asp-for="PricePerhead" type="number" class="form-control" placeholder="e.g. 50" id="pricePerHead" />
-                <span class="text-danger" asp-validation-for="PricePerhead"></span>
-            </div>
+            </div> 
             <div id="paymentFields">
                 <div class="row g-3">
                     <div class="col-md-6">
@@ -104,10 +104,11 @@
             </div>
         </div>
 
-        <div class="container-footer">
-            <label class="form-label mb-0">Amount Due (auto calculated)</label>
-            <span id="amountDue"><strong>R 0.00</strong></span>
-        </div>
+       <div class="col-md-6">
+    <label asp-for="AmountDue" class="form-label">Amount due (R)</label>
+    <input asp-for="AmountDue" type="number" class="form-control" placeholder="e.g. 1000" id="AmountDue" />
+    <span class="text-danger" asp-validation-for="AmountDue"></span>
+</div>
 
         <div class="d-flex justify-content-end gap-2">
             <a asp-action="Index" class="btn btn-cancel">Cancel</a>
@@ -122,26 +123,15 @@
     }
 
     <script>
-        //define reusable function
-        function calculateAmountDue() {
-            /**
-             * document.getElementById() finds input field by id
-             * .value gets the input value
-             * parseFloat() converts the text value to a decimal number
-             * || 0 defaults to a 0 instead of NaN
-             */
+        const amountPaidInput = document.getElementById('AmountPaid');
+        const paymentStatus = document.getElementById('PaymentStatus');
+        const paymentStatusHidden = document.getElementById('PaymentStatusHidden')
 
-            const passengers = parseFloat(document.getElementById('passengers').value) || 0;
-            const pricePerHead = parseFloat(document.getElementById('pricePerHead').value) || 0;
-            const amountDue = passengers * pricePerHead;
-            const amountPaid = parseFloat(document.getElementById('AmountPaid').value) || 0;
 
-            //Find amount due by its span id and format to 2 decimal places
-            document.getElementById('amountDue').innerHTML = '<strong>R ' + amountDue.toFixed(2) + '</strong>';
+        function autoSetPaymentStatus() {
+            const amountDue = parseFloat(document.getElementById('AmountDue').value) || 0;
+            const amountPaid = parseFloat(amountPaidInput.value) || 0;
 
-             const paymentStatus = document.getElementById('PaymentStatus');
-             const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
-            //Auto set payment status
             if (amountPaid >= amountDue && amountDue > 0) {
                 paymentStatus.value = 'Paid';
             } else if (amountPaid > 0 && amountPaid < amountDue) {
@@ -152,13 +142,9 @@
             paymentStatusHidden.value = paymentStatus.value;
         }
 
-        document.getElementById('AmountPaid').addEventListener('input', calculateAmountDue);
-
-        //listen for any change in the input field
-        document.getElementById('passengers').addEventListener('input', calculateAmountDue);
-        document.getElementById('pricePerHead').addEventListener('input', calculateAmountDue);
-
-         //fires calculation as soon as page finishes loading
-        document.addEventListener('DOMContentLoaded', calculateAmountDue);
+         // Event listeners
+        document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
+        document.getElementById('AmountPaid').addEventListener('input', autoSetPaymentStatus);
+        document.addEventListener('DOMContentLoaded', autoSetPaymentStatus);
     </script>
 }

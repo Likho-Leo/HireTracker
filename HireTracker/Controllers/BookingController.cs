@@ -83,7 +83,6 @@ namespace HireTracker.Controllers
                 try
                 {
                     booking.CreatedAt = DateTime.Now;
-                    booking.AmountDue = booking.PricePerhead * booking.Passengers;
                     _context.Bookings.Add(booking);
                     await _context.SaveChangesAsync();
                     TempData["msg"] = "Booking successfully added!";
@@ -129,8 +128,7 @@ namespace HireTracker.Controllers
                     existingBooking.CompanyName = booking.CompanyName;
                     existingBooking.ContactNumber = booking.ContactNumber;
                     existingBooking.Passengers = booking.Passengers;
-                    existingBooking.PricePerhead = booking.PricePerhead;
-                    existingBooking.AmountDue = booking.Passengers * booking.PricePerhead;
+                    existingBooking.ReturnDate = booking.ReturnDate;
                     existingBooking.AmountPaid = booking.AmountPaid;
                     existingBooking.PaymentStatus = booking.PaymentStatus;
                     existingBooking.UpdatedAt = DateTime.Now;
