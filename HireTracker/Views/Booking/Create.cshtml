@@ -17,14 +17,20 @@
         <hr class="mt-0 mb-3" />
         <div class="row g-3 mb-4">
             <div class="col-md-6">
-                <label asp-for="Date" class="form-label">Date</label>
-                <input asp-for="Date" type="date" class="form-control" />
+                <label asp-for="Date" class="form-label" >Date</label>
+                <input asp-for="Date" type="date" class="form-control" id="Date" />
                 <span class="text-danger" asp-validation-for="Date"></span>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" id="returnDateField">
                 <label asp-for="ReturnDate" class="form-label">Return Date</label>
-                <input asp-for="ReturnDate" type="date" class="form-control" />
+                <input asp-for="ReturnDate" type="date" class="form-control" id="ReturnDate" />
                 <span class="text-danger" asp-validation-for="ReturnDate"></span>
+            </div>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="returnSameDay" />
+                    <label class="form-check-label" for="returnSameDay">Returning same day</label>
+                </div>
             </div>
             <div class="col-md-12">
                 <label asp-for="Vehicle" class="form-label">Vehicle</label>
@@ -83,7 +89,7 @@
             
             <div class="col-md-12">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="notYetPaid" checked />
+                    <input type="checkbox" class="form-check-input" id="notYetPaid" />
                     <label class="form-check-label" for="notYetPaid">Not yet paid</label>
                 </div>
             </div>
@@ -162,6 +168,19 @@
                 paymentStatusHidden.value = '';
             }
         }
+
+        document.getElementById('returnSameDay').addEventListener('change', function() {
+            const returnDateInput = document.getElementById('ReturnDate');
+            const departureDate = document.getElementById('Date').value;
+
+            if (this.checked) {
+                returnDateInput.value = departureDate;
+                document.getElementById('returnDateField').style.display = 'none';
+            } else {
+                returnDateInput.value = '';
+                document.getElementById('returnDateField').style.display = 'block';
+            }
+        });
 
         // Event listeners
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);

@@ -56,7 +56,20 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.Date.ToString("dd MMM yyyy")</td>
+                        <td>
+                            @item.Date.ToString("dd MMM yyyy")
+                            @if (item.ReturnDate.HasValue)
+                            {
+                                if (item.ReturnDate.Value == item.Date)
+                                {
+                                    <span class="badge-return">Same day return</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-return">Return: @item.ReturnDate.Value.ToString("dd MMM yyyy")</span>
+                                }
+                            }
+                        </td>
                         <td>@item.Pickup → @item.Dropoff</td>
                         <td>@item.CompanyName</td>
                         <td>@item.Vehicle</td>
