@@ -34,13 +34,20 @@
             </div>
             <div class="col-md-12">
                 <label asp-for="Vehicle" class="form-label">Vehicle</label>
-                <select asp-for="Vehicle" class="form-select">
-                    <option value="">Select vehicle</option>
-                    <option value="15 seater">15 seater</option>
-                    <option value="22 seater">22 seater</option>
-                    <option value="65 seater">65 seater</option>
-                </select>
-                <span class="text-danger" asp-validation-for="Vehicle"></span>
+               <div id="vehicleList">
+                    <div class="d-flex gap-2 mb-2 vehicle-row">
+                        <select class="form-select vehicle-select" onchange="updateVehicleField()">
+                            <option value="">Select vehicle</option>
+                            <option value="15 seater">15 seater</option>
+                            <option value="22 seater">22 seater</option>
+                            <option value="70 seater">70 seater</option>
+                        </select>
+                        <button type="button" class="btn btn-sm btn-cancel" onclick="removeVehicle(this)">Remove</button>
+                    </div>
+               </div>
+                <button type="button" class="btn btn-sm btn-new-booking mt-2" onclick="addVehicle()">Add vehicle</button>
+                <input type="hidden" id="Vehicle" name="Vehicle" />     @*builds comma seperated string on submit*@
+                <span class="text-danger" asp-validation-for="Vehicle"></span> 
             </div>
             <div class="col-md-6">
                 <label asp-for="Pickup" class="form-label">Pickup location</label>
@@ -181,6 +188,41 @@
                 document.getElementById('returnDateField').style.display = 'block';
             }
         });
+
+        function addVehicle() {
+            const vehicleList = document.getElementById('vehicleList');
+            const row = document.createElement('div');
+            row.className = 'd-flex gap-2 mb-2 vehicle-row';
+            row.innerHTML = `
+            <select class="form-select vehicle-select" onchange="updateVehicleField()">
+                <option value="">Select vehicle</option>
+                <option value="15 seater">15 seater</option>
+                <option value="22 seater">22 seater</option>
+                <option value="70 seater">70 seater</option>
+            </select>
+            <button type="button" class="btn btn-sm btn-cancel"onclick="removeVehicle(this)">Remove</button>
+            `;
+            vehicleList.appendChild(row);
+        }
+
+        function removeVehicle(btn) {
+            const rows = document.querySelectorAll('.vehicle-row');
+            if(rows.length === 1) {
+                alert('At least one vehicle is required.');
+                return;
+            }
+            btn.parentElement.remove();
+            updateVehicleField();
+        }
+
+        function updateVehicleField() {
+            const selects = document.querySelectorAll('.vehicle-select');
+            const vehicles = [];
+            selects.forEach(select => {
+                if(select.value) vehicles.push(select.value);
+            });
+            document.getElementById('Vehicle').value = vehicles.join(', ')
+        }
 
         // Event listeners
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
