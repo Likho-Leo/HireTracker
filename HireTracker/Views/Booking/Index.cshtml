@@ -72,7 +72,46 @@
                         </td>
                         <td>@item.Pickup → @item.Dropoff</td>
                         <td>@item.CompanyName</td>
-                        <td>@item.Vehicle</td>
+                        <td>
+                            @{
+                                var vehicles = item.Vehicle?.Split(", ") ?? new string[0];
+                                var vehicleCounts = vehicles.GroupBy(v => v)
+                                .ToDictionary(g => g.Key, g => g.Count());
+                                var vehicleDisplay = string.Join(", ", vehicleCounts
+                                .Select(kv => kv.Value > 1 ? $"{kv.Key} x{kv.Value}" : kv.Key));
+                                var uniqueVehicles = vehicleCounts.Count;
+                            }
+
+                            @if (uniqueVehicles <= 1)
+                            {
+                                @vehicleDisplay
+                            }
+                            else
+                            {
+                                var firstVehicle = vehicleCounts.First();
+                                var firstDisplay = firstVehicle.Value > 1 ? $"{firstVehicle.Key} x{firstVehicle.Value}" : firstVehicle.Key;
+                                var remaining = uniqueVehicles - 1;
+
+                                <div class="dropdown">
+                                    <span class="vehicle-summary" data-bs-toggle="dropdown" style="cursor:pointer;">
+                                        @firstDisplay
+                                        @if (remaining > 0)
+                                        {
+                                            <span>+@remaining ▼</span>
+                                        }
+                                    </span>
+                                    <ul class="dropdown-menu">
+                                        @foreach (var kv in vehicleCounts)
+                                        {
+                                            <li class="dropdown-item">
+                                                @(kv.Value > 1 ? $"{kv.Key} x{kv.Value}" : kv.Key)
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+
+                            }
+                        </td>
                         <td>@item.Passengers</td>
                         <td>R @item.AmountDue.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td>
                         @* <td>R @item.AmountPaid.ToString("N2", System.Globalization.CultureInfo.InvariantCulture)</td> *@

@@ -246,3 +246,11 @@ body {
     margin-top: 3px;
     width: fit-content;
 }
+
+.table td {
+    white-space: nowrap;
+}
+
+.table thead th {
+    white-space: nowrap;
+}
