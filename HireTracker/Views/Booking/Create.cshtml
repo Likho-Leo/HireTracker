@@ -80,7 +80,7 @@
             </div>
             <div class="col-md-6">
                 <label asp-for="ContactNumber" class="form-label">Contact number</label>
-                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="Enter contact number" />
+                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="Enter contact number" id="ContactNumber" />
                 <span class="text-danger" asp-validation-for="ContactNumber"></span>
             </div>
         </div>
@@ -295,11 +295,11 @@
             //     document.getElementById('contactError').textContent = '';
             // }
 
-            if (hasError) {
-                e.preventDefault();
-                // Scroll to first error
-                document.querySelector('.text-danger:not(:empty)')?.scrollIntoView({ behavior: 'smooth' });
-            }
+            // if (hasError) {
+            //     e.preventDefault();
+            //     // Scroll to first error
+            //     document.querySelector('.text-danger:not(:empty)')?.scrollIntoView({ behavior: 'smooth' });
+            // }
         });
 
         // Set minimum date to today
@@ -333,6 +333,17 @@
                 document.getElementById('returnDateError').textContent = '';
             }
         });
+
+        // document.getElementById('ContactNumber').addEventListener('blur', function() {
+        //     const value = this.value.trim();
+        //     const saNumber = /^(\+27|0)[6-8][0-9]{8}$/;
+        //     if (value && !saNumber.test(value)) {
+        //         document.getElementById('contactError').textContent =
+        //             'Please enter a valid South African number e.g. 0721234567 or +27721234567';
+        //     } else {
+        //         document.getElementById('contactError').textContent = '';
+        //     }
+        // });
 
         document.getElementById('passengers').addEventListener('input', validatePassengers);
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
