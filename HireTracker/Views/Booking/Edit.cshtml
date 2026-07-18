@@ -10,7 +10,7 @@
 </div>
 
 <div class="form-card">
-    <form asp-action="Edit" method="post" asp-antiforgery="true">
+    <form asp-action="Edit" method="post" asp-antiforgery="true" id="editForm">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
@@ -20,13 +20,14 @@
             <div class="col-md-6">
                 <input type="hidden" asp-for="BookingId" />
                 <label asp-for="Date" class="form-label">Date</label>
-                <input asp-for="Date" type="date" class="form-control" />
+                <input asp-for="Date" type="date" class="form-control" id="Date" />
                 <span class="text-danger" asp-validation-for="Date"></span>
             </div>
             <div class="col-md-6">
-                <label asp-for="ReturnDate" class="form-label">ReturnDate</label>
-                <input asp-for="ReturnDate" type="date" class="form-control" />
+                <label asp-for="ReturnDate" class="form-label">Return Date</label>
+                <input asp-for="ReturnDate" type="date" class="form-control" id="ReturnDate" />
                 <span class="text-danger" asp-validation-for="ReturnDate"></span>
+                <span class="text-danger" id="returnDateError"></span>
             </div>
             <div class="col-md-12">
                 <label asp-for="Vehicle" class="form-label">Vehicle</label>
@@ -44,6 +45,7 @@
                 <button type="button" class="btn btn-sm btn-new-booking mt-2" onclick="addVehicle()">Add vehicle</button>
                 <input type="hidden" id="Vehicle" name="Vehicle" />     @*builds comma seperated string on submit*@
                 <span class="text-danger" asp-validation-for="Vehicle"></span>
+                <span class="text-danger" id="vehicleError"></span>
             </div>
             <div class="col-md-6">
                 <label asp-for="Pickup" class="form-label">Pickup location</label>
@@ -75,9 +77,9 @@
                 <span class="text-danger" asp-validation-for="CompanyName"></span>
             </div>
             <div class="col-md-6">
-                <label asp-for="ContactNumber" class="form-label">Contact number</label>
-                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="Enter contact number" />
+                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="e.g. 0721234567" id="ContactNumber" oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
                 <span class="text-danger" asp-validation-for="ContactNumber"></span>
+                <span class="text-danger" id="contactError"></span>
             </div>
         </div>
 
@@ -132,13 +134,17 @@
     <script>
         const amountPaidInput = document.getElementById('AmountPaid');
         const paymentStatus = document.getElementById('PaymentStatus');
-        const paymentStatusHidden = document.getElementById('PaymentStatusHidden')
+        const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
 
+        const capacities = {
+            '15 seater': 15,
+            '22 seater': 22,
+            '70 seater': 70
+        };
 
         function autoSetPaymentStatus() {
             const amountDue = parseFloat(document.getElementById('AmountDue').value) || 0;
             const amountPaid = parseFloat(amountPaidInput.value) || 0;
-
             if (amountPaid >= amountDue && amountDue > 0) {
                 paymentStatus.value = 'Paid';
             } else if (amountPaid > 0 && amountPaid < amountDue) {
@@ -149,25 +155,25 @@
             paymentStatusHidden.value = paymentStatus.value;
         }
 
-         function addVehicle() {
+        function addVehicle() {
             const vehicleList = document.getElementById('vehicleList');
             const row = document.createElement('div');
             row.className = 'd-flex gap-2 mb-2 vehicle-row';
             row.innerHTML = `
-            <select class="form-select vehicle-select" onchange="updateVehicleField()">
-                <option value="">Select vehicle</option>
-                <option value="15 seater">15 seater</option>
-                <option value="22 seater">22 seater</option>
-                <option value="70 seater">70 seater</option>
-            </select>
-            <button type="button" class="btn btn-sm btn-cancel"onclick="removeVehicle(this)">Remove</button>
+                <select class="form-select vehicle-select" onchange="updateVehicleField()">
+                    <option value="">Select vehicle</option>
+                    <option value="15 seater">15 seater</option>
+                    <option value="22 seater">22 seater</option>
+                    <option value="70 seater">70 seater</option>
+                </select>
+                <button type="button" class="btn btn-sm btn-cancel" onclick="removeVehicle(this)">Remove</button>
             `;
             vehicleList.appendChild(row);
         }
 
         function removeVehicle(btn) {
             const rows = document.querySelectorAll('.vehicle-row');
-            if(rows.length === 1) {
+            if (rows.length === 1) {
                 alert('At least one vehicle is required.');
                 return;
             }
@@ -179,19 +185,38 @@
             const selects = document.querySelectorAll('.vehicle-select');
             const vehicles = [];
             selects.forEach(select => {
-                if(select.value) vehicles.push(select.value);
+                if (select.value) vehicles.push(select.value);
             });
-            document.getElementById('Vehicle').value = vehicles.join(', ')
+            document.getElementById('Vehicle').value = vehicles.join(', ');
+            validatePassengers();
         }
 
-        // Pre-populate vehicle rows on page load
+        function validatePassengers() {
+            const selects = document.querySelectorAll('.vehicle-select');
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            let totalCapacity = 0;
+            selects.forEach(select => {
+                if (select.value && capacities[select.value]) {
+                    totalCapacity += capacities[select.value];
+                }
+            });
+            const errorSpan = document.getElementById('vehicleError');
+            if (totalCapacity > 0 && passengers > totalCapacity) {
+                errorSpan.textContent = `Selected vehicles can only carry ${totalCapacity} passengers total.`;
+            } else {
+                errorSpan.textContent = '';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('Date').setAttribute('min', today);
+
+            // Pre-populate vehicle rows
             const existingVehicles = '@Model.Vehicle'.split(', ');
             const vehicleList = document.getElementById('vehicleList');
-
-            // Clear the default empty row
             vehicleList.innerHTML = '';
-
             existingVehicles.forEach(vehicle => {
                 const row = document.createElement('div');
                 row.className = 'd-flex gap-2 mb-2 vehicle-row';
@@ -206,13 +231,77 @@
                 `;
                 vehicleList.appendChild(row);
             });
-
             updateVehicleField();
+            autoSetPaymentStatus();
+
+            // Set return date min
+            const departureDate = document.getElementById('Date').value;
+            if (departureDate) {
+                document.getElementById('ReturnDate').setAttribute('min', departureDate);
+            }
         });
 
-         // Event listeners
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            let hasError = false;
+
+            // Passenger limit check
+            const selects = document.querySelectorAll('.vehicle-select');
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            let totalCapacity = 0;
+            selects.forEach(select => {
+                if (select.value && capacities[select.value]) {
+                    totalCapacity += capacities[select.value];
+                }
+            });
+            if (totalCapacity > 0 && passengers > totalCapacity) {
+                document.getElementById('vehicleError').textContent =
+                    `Selected vehicles can only carry ${totalCapacity} passengers total.`;
+                hasError = true;
+            } else {
+                document.getElementById('vehicleError').textContent = '';
+            }
+
+            // Return date check
+            const departureDate = document.getElementById('Date').value;
+            const returnDate = document.getElementById('ReturnDate').value;
+            if (returnDate && returnDate < departureDate) {
+                document.getElementById('returnDateError').textContent =
+                    'Return date cannot be before the departure date.';
+                hasError = true;
+            } else {
+                document.getElementById('returnDateError').textContent = '';
+            }
+
+            // Contact number check
+            const contactNumber = document.getElementById('ContactNumber').value.trim();
+            const saNumber = /^(\+27|0)[6-8][0-9]{8}$/;
+            if (contactNumber && !saNumber.test(contactNumber)) {
+                document.getElementById('contactError').textContent =
+                    'Please enter a valid phone number e.g. 0721234567';
+                hasError = true;
+            } else {
+                document.getElementById('contactError').textContent = '';
+            }
+
+            if (hasError) {
+                e.preventDefault();
+                document.querySelector('.text-danger:not(:empty)')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        document.getElementById('Date').addEventListener('change', function() {
+            document.getElementById('ReturnDate').setAttribute('min', this.value);
+            const returnDate = document.getElementById('ReturnDate').value;
+            if (returnDate && returnDate < this.value) {
+                document.getElementById('returnDateError').textContent =
+                    'Return date cannot be before the departure date.';
+            } else {
+                document.getElementById('returnDateError').textContent = '';
+            }
+        });
+
+        document.getElementById('passengers').addEventListener('input', validatePassengers);
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
         document.getElementById('AmountPaid').addEventListener('input', autoSetPaymentStatus);
-        document.addEventListener('DOMContentLoaded', autoSetPaymentStatus);
     </script>
 }
