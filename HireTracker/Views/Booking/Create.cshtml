@@ -78,10 +78,12 @@
                 <input asp-for="CompanyName" type="text" class="form-control" placeholder="Enter company name" />
                 <span class="text-danger" asp-validation-for="CompanyName"></span>
             </div>
+
             <div class="col-md-6">
                 <label asp-for="ContactNumber" class="form-label">Contact number</label>
-                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="Enter contact number" id="ContactNumber" />
+                <input asp-for="ContactNumber" type="text" class="form-control" placeholder="e.g 072123456" id="ContactNumber" oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
                 <span class="text-danger" asp-validation-for="ContactNumber"></span>
+                <span class="text-danger" id="contactError"></span>
             </div>
         </div>
 
@@ -100,13 +102,16 @@
                     <label class="form-check-label" for="notYetPaid">Not yet paid</label>
                 </div>
             </div>
+
             <div id="paymentFields">
                 <div class="row g-3">
+
                     <div class="col-md-6">
                         <label asp-for="AmountPaid" class="form-label">Amount paid (R)</label>
                         <input asp-for="AmountPaid" type="number" class="form-control" placeholder="e.g. 0" id="AmountPaid" />
                         <span class="text-danger" asp-validation-for="AmountPaid"></span>
                     </div>
+
                     <div class="col-md-6">
                         <label asp-for="PaymentStatus" class="form-label">Payment status</label>
                         <select asp-for="PaymentStatus" class="form-select" id="PaymentStatus" disabled>
@@ -118,13 +123,16 @@
                         <input type="hidden" asp-for="PaymentStatus" id="PaymentStatusHidden" />
                         <span class="text-danger" asp-validation-for="PaymentStatus"></span>
                     </div>
+
                 </div>  
             </div>
+
             <div class="col-md-6">
                 <label asp-for="AmountDue" class="form-label">Amount due (R)</label>
                 <input asp-for="AmountDue" type="number" class="form-control" placeholder="e.g. 1000" id="AmountDue" />
                 <span class="text-danger" asp-validation-for="AmountDue"></span>
             </div>
+
         </div>
 
         <div class="d-flex justify-content-end gap-2">
@@ -266,8 +274,7 @@
                 }
             });
             if (totalCapacity > 0 && passengers > totalCapacity) {
-                document.getElementById('vehicleError').textContent =
-                    `Selected vehicles can only carry ${totalCapacity} passengers total.`;
+                document.getElementById('vehicleError').textContent =`Selected vehicles can only carry ${totalCapacity} passengers total.`;
                 hasError = true;
             } else {
                 document.getElementById('vehicleError').textContent = '';
@@ -277,29 +284,28 @@
             const departureDate = document.getElementById('Date').value;
             const returnDate = document.getElementById('ReturnDate').value;
             if (returnDate && returnDate < departureDate) {
-                document.getElementById('returnDateError').textContent =
-                    'Return date cannot be before the departure date.';
+                document.getElementById('returnDateError').textContent = 'Return date cannot be before the departure date.';
                 hasError = true;
             } else {
                 document.getElementById('returnDateError').textContent = '';
             }
 
             // Contact number check
-            // const contactNumber = document.getElementById('ContactNumber').value.trim();
-            // const saNumber = /^(\+27|0)[6-8][0-9]{8}$/;
-            // if (contactNumber && !saNumber.test(contactNumber)) {
-            //     document.getElementById('contactError').textContent =
-            //         'Please enter a valid South African number e.g. 0721234567';
-            //     hasError = true;
-            // } else {
-            //     document.getElementById('contactError').textContent = '';
-            // }
+            const contactNumber = document.getElementById('ContactNumber').value.trim();
+            console.log('Contact number:', contactNumber);
+            const saNumber = /^(\+27|0)[6-8][0-9]{8}$/;
+            if (contactNumber && !saNumber.test(contactNumber)) {
+                document.getElementById('contactError').textContent = 'Please enter a valid phone number e.g. 0721234567';
+                hasError = true;
+            } else {
+                document.getElementById('contactError').textContent = '';
+            }
 
-            // if (hasError) {
-            //     e.preventDefault();
-            //     // Scroll to first error
-            //     document.querySelector('.text-danger:not(:empty)')?.scrollIntoView({ behavior: 'smooth' });
-            // }
+            if (hasError) {
+                e.preventDefault();
+                // Scroll to first error
+                document.querySelector('.text-danger:not(:empty)')?.scrollIntoView({ behavior: 'smooth' });
+            }
         });
 
         // Set minimum date to today
@@ -333,17 +339,6 @@
                 document.getElementById('returnDateError').textContent = '';
             }
         });
-
-        // document.getElementById('ContactNumber').addEventListener('blur', function() {
-        //     const value = this.value.trim();
-        //     const saNumber = /^(\+27|0)[6-8][0-9]{8}$/;
-        //     if (value && !saNumber.test(value)) {
-        //         document.getElementById('contactError').textContent =
-        //             'Please enter a valid South African number e.g. 0721234567 or +27721234567';
-        //     } else {
-        //         document.getElementById('contactError').textContent = '';
-        //     }
-        // });
 
         document.getElementById('passengers').addEventListener('input', validatePassengers);
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
