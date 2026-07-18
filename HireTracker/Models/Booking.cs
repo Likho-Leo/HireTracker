@@ -11,6 +11,7 @@ namespace HireTracker.Models
         [Display(Name = "Departure Date")]
         public DateOnly Date { get; set; }
 
+        [Required(ErrorMessage = "Departure Date is required")]
         [Display(Name = "ReturnDate")]
         public DateOnly? ReturnDate { get; set; }
 
