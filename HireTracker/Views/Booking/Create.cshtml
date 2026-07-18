@@ -9,7 +9,7 @@
 </div>
 
 <div class="form-card">
-    <form asp-action="Create" method="post" asp-antiforgery="true">
+    <form asp-action="Create" method="post" asp-antiforgery="true" id="createForm">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
@@ -146,11 +146,16 @@
         const paymentStatus = document.getElementById('PaymentStatus');
         const paymentStatusHidden = document.getElementById('PaymentStatusHidden');
 
+        const capacities = {
+            '15 seater': 15,
+            '22 seater': 22,
+            '70 seater': 70
+        };
+
         function autoSetPaymentStatus() {
             if (!checkbox.checked) {
                 const amountDue = parseFloat(document.getElementById('AmountDue').value) || 0;
                 const amountPaid = parseFloat(amountPaidInput.value) || 0;
-
                 if (amountPaid >= amountDue && amountDue > 0) {
                     paymentStatus.value = 'Paid';
                 } else if (amountPaid > 0 && amountPaid < amountDue) {
@@ -176,79 +181,30 @@
             }
         }
 
-        document.getElementById('returnSameDay').addEventListener('change', function() {
-            const returnDateInput = document.getElementById('ReturnDate');
-            const departureDate = document.getElementById('Date').value;
-
-            if (this.checked) {
-                returnDateInput.value = departureDate;
-                document.getElementById('returnDateField').style.display = 'none';
-            } else {
-                returnDateInput.value = '';
-                document.getElementById('returnDateField').style.display = 'block';
-            }
-        });
-
         function addVehicle() {
             const vehicleList = document.getElementById('vehicleList');
             const row = document.createElement('div');
             row.className = 'd-flex gap-2 mb-2 vehicle-row';
             row.innerHTML = `
-            <select class="form-select vehicle-select" onchange="updateVehicleField()">
-                <option value="">Select vehicle</option>
-                <option value="15 seater">15 seater</option>
-                <option value="22 seater">22 seater</option>
-                <option value="70 seater">70 seater</option>
-            </select>
-            <button type="button" class="btn btn-sm btn-cancel"onclick="removeVehicle(this)">Remove</button>
+                <select class="form-select vehicle-select" onchange="updateVehicleField()">
+                    <option value="">Select vehicle</option>
+                    <option value="15 seater">15 seater</option>
+                    <option value="22 seater">22 seater</option>
+                    <option value="70 seater">70 seater</option>
+                </select>
+                <button type="button" class="btn btn-sm btn-cancel" onclick="removeVehicle(this)">Remove</button>
             `;
             vehicleList.appendChild(row);
         }
 
         function removeVehicle(btn) {
             const rows = document.querySelectorAll('.vehicle-row');
-            if(rows.length === 1) {
+            if (rows.length === 1) {
                 alert('At least one vehicle is required.');
                 return;
             }
             btn.parentElement.remove();
             updateVehicleField();
-        }
-
-        function updateVehicleField() {
-            const selects = document.querySelectorAll('.vehicle-select');
-            const vehicles = [];
-            selects.forEach(select => {
-                if(select.value) vehicles.push(select.value);
-            });
-            document.getElementById('Vehicle').value = vehicles.join(', ')
-        }
-
-        const capacities = {
-            '15 seater': 15,
-            '22 seater': 22,
-            '70 seater': 70
-        };
-
-        function validatePassengers() {
-            console.log('Validating passangers...');
-            const selects = document.querySelectorAll('.vehicle-select');
-            const passengers = parseInt(document.getElementById('passengers').value) || 0;
-            let totalCapacity = 0;
-
-            selects.forEach(select => {
-                if (select.value && capacities[select.value]) {
-                    totalCapacity += capacities[select.value];
-                }
-            });
-
-            console.log('Total Capacity:', totalCapacity, 'Passangers:', passengers);
-            const errorSpan = document.getElementById('vehicleError');
-            if (totalCapacity > 0 && passengers > totalCapacity) {
-                errorSpan.textContent = `Selected vehicles can only carry ${totalCapacity} passengers total.`;
-            } else {
-                errorSpan.textContent = '';
-            }
         }
 
         function updateVehicleField() {
@@ -261,14 +217,66 @@
             validatePassengers();
         }
 
-        document.getElementById('passengers').addEventListener('input', validatePassengers);
+        function validatePassengers() {
+            const selects = document.querySelectorAll('.vehicle-select');
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            let totalCapacity = 0;
 
-        // Event listeners
+            selects.forEach(select => {
+                if (select.value && capacities[select.value]) {
+                    totalCapacity += capacities[select.value];
+                }
+            });
+
+            const errorSpan = document.getElementById('vehicleError');
+            if (totalCapacity > 0 && passengers > totalCapacity) {
+                errorSpan.textContent = `Selected vehicles can only carry ${totalCapacity} passengers total.`;
+            } else {
+                errorSpan.textContent = '';
+            }
+        }
+
+        document.getElementById('returnSameDay').addEventListener('change', function() {
+            const returnDateInput = document.getElementById('ReturnDate');
+            const departureDate = document.getElementById('Date').value;
+            if (this.checked) {
+                returnDateInput.value = departureDate;
+                document.getElementById('returnDateField').style.display = 'none';
+            } else {
+                returnDateInput.value = '';
+                document.getElementById('returnDateField').style.display = 'block';
+            }
+        });
+
+        document.getElementById('createForm').addEventListener('submit', function(e) {
+            const selects = document.querySelectorAll('.vehicle-select');
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            let totalCapacity = 0;
+
+            selects.forEach(select => {
+                if (select.value && capacities[select.value]) {
+                    totalCapacity += capacities[select.value];
+                }
+            });
+
+            if (totalCapacity > 0 && passengers > totalCapacity) {
+                e.preventDefault();
+                document.getElementById('vehicleError').textContent =
+                    `Selected vehicles can only carry ${totalCapacity} passengers total.`;
+                document.getElementById('vehicleError').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+       // Set minimum date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('Date').setAttribute('min', today);
+        });
+
+        document.getElementById('passengers').addEventListener('input', validatePassengers);
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
         document.getElementById('AmountPaid').addEventListener('input', autoSetPaymentStatus);
-        // document.getElementById('passengers').addEventListener('input', validatePassengers);
 
-        // Run on page load
         togglePaymentFields();
         checkbox.addEventListener('change', togglePaymentFields);
     </script>
