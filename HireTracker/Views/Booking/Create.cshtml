@@ -24,7 +24,7 @@
             <div class="col-md-6" id="returnDateField">
                 <label asp-for="ReturnDate" class="form-label">Return Date</label>
                 <input asp-for="ReturnDate" type="date" class="form-control" id="ReturnDate" />
-                <span class="text-danger" asp-validation-for="ReturnDate"></span>
+                <span class="text-danger" asp-validation-for="ReturnDate" id="returnDateError"></span>
             </div>
             <div class="col-md-12">
                 <div class="form-check">
@@ -152,6 +152,8 @@
             '70 seater': 70
         };
 
+        //functions
+
         function autoSetPaymentStatus() {
             if (!checkbox.checked) {
                 const amountDue = parseFloat(document.getElementById('AmountDue').value) || 0;
@@ -236,6 +238,8 @@
             }
         }
 
+        //Event Listeners
+
         document.getElementById('returnSameDay').addEventListener('change', function() {
             const returnDateInput = document.getElementById('ReturnDate');
             const departureDate = document.getElementById('Date').value;
@@ -248,29 +252,86 @@
             }
         });
 
+        //submit event listener
         document.getElementById('createForm').addEventListener('submit', function(e) {
+            let hasError = false;
+
+            // Passenger limit check
             const selects = document.querySelectorAll('.vehicle-select');
             const passengers = parseInt(document.getElementById('passengers').value) || 0;
             let totalCapacity = 0;
-
             selects.forEach(select => {
                 if (select.value && capacities[select.value]) {
                     totalCapacity += capacities[select.value];
                 }
             });
-
             if (totalCapacity > 0 && passengers > totalCapacity) {
-                e.preventDefault();
                 document.getElementById('vehicleError').textContent =
                     `Selected vehicles can only carry ${totalCapacity} passengers total.`;
-                document.getElementById('vehicleError').scrollIntoView({ behavior: 'smooth' });
+                hasError = true;
+            } else {
+                document.getElementById('vehicleError').textContent = '';
+            }
+
+            // Return date check
+            const departureDate = document.getElementById('Date').value;
+            const returnDate = document.getElementById('ReturnDate').value;
+            if (returnDate && returnDate < departureDate) {
+                document.getElementById('returnDateError').textContent =
+                    'Return date cannot be before the departure date.';
+                hasError = true;
+            } else {
+                document.getElementById('returnDateError').textContent = '';
+            }
+
+            // Contact number check
+            // const contactNumber = document.getElementById('ContactNumber').value.trim();
+            // const saNumber = /^(\+27|0)[6-8][0-9]{8}$/;
+            // if (contactNumber && !saNumber.test(contactNumber)) {
+            //     document.getElementById('contactError').textContent =
+            //         'Please enter a valid South African number e.g. 0721234567';
+            //     hasError = true;
+            // } else {
+            //     document.getElementById('contactError').textContent = '';
+            // }
+
+            if (hasError) {
+                e.preventDefault();
+                // Scroll to first error
+                document.querySelector('.text-danger:not(:empty)')?.scrollIntoView({ behavior: 'smooth' });
             }
         });
 
-       // Set minimum date to today
+        // Set minimum date to today
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('Date').setAttribute('min', today);
+        });
+        
+        //return date validation
+        document.getElementById('ReturnDate').addEventListener('change', function() {
+            const departureDate = document.getElementById('Date').value;
+            const returnDate = this.value;
+            const errorSpan = document.getElementById('returnDateError');
+
+            if (departureDate && returnDate && returnDate < departureDate) {
+                errorSpan.textContent = 'Return date cannot be before the departure date.';
+            } else {
+                errorSpan.textContent = '';
+            }
+        });
+
+        document.getElementById('Date').addEventListener('change', function() {
+            document.getElementById('ReturnDate').setAttribute('min', this.value);
+
+            // Re-validate return date if it's already filled in
+            const returnDate = document.getElementById('ReturnDate').value;
+            if (returnDate && returnDate < this.value) {
+                document.getElementById('returnDateError').textContent =
+                    'Return date cannot be before the departure date.';
+            } else {
+                document.getElementById('returnDateError').textContent = '';
+            }
         });
 
         document.getElementById('passengers').addEventListener('input', validatePassengers);
