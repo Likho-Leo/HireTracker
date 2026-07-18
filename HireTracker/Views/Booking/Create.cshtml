@@ -47,7 +47,7 @@
                </div>
                 <button type="button" class="btn btn-sm btn-new-booking mt-2" onclick="addVehicle()">Add vehicle</button>
                 <input type="hidden" id="Vehicle" name="Vehicle" />     @*builds comma seperated string on submit*@
-                <span class="text-danger" asp-validation-for="Vehicle"></span> 
+                <span class="text-danger" id="vehicleError" asp-validation-for="Vehicle"></span>
             </div>
             <div class="col-md-6">
                 <label asp-for="Pickup" class="form-label">Pickup location</label>
@@ -223,6 +223,45 @@
             });
             document.getElementById('Vehicle').value = vehicles.join(', ')
         }
+
+        const capacities = {
+            '15 seater': 15,
+            '22 seater': 22,
+            '70 seater': 70
+        };
+
+        function validatePassengers() {
+            console.log('Validating passangers...');
+            const selects = document.querySelectorAll('.vehicle-select');
+            const passengers = parseInt(document.getElementById('passengers').value) || 0;
+            let totalCapacity = 0;
+
+            selects.forEach(select => {
+                if (select.value && capacities[select.value]) {
+                    totalCapacity += capacities[select.value];
+                }
+            });
+
+            console.log('Total Capacity:', totalCapacity, 'Passangers:', passengers);
+            const errorSpan = document.getElementById('vehicleError');
+            if (totalCapacity > 0 && passengers > totalCapacity) {
+                errorSpan.textContent = `Selected vehicles can only carry ${totalCapacity} passengers total.`;
+            } else {
+                errorSpan.textContent = '';
+            }
+        }
+
+        function updateVehicleField() {
+            const selects = document.querySelectorAll('.vehicle-select');
+            const vehicles = [];
+            selects.forEach(select => {
+                if (select.value) vehicles.push(select.value);
+            });
+            document.getElementById('Vehicle').value = vehicles.join(', ');
+            validatePassengers();
+        }
+
+        document.getElementById('passengers').addEventListener('input', validatePassengers);
 
         // Event listeners
         document.getElementById('AmountDue').addEventListener('input', autoSetPaymentStatus);
