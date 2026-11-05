@@ -2,8 +2,6 @@
 
 A private web-based hire management system built for a family transport business in Matatiele, Eastern Cape. Replaces a paper-based booking system used to track taxi and bus charter hires.
 
-Currently in use by the business owners to manage bookings, track payments and monitor outstanding balances.
-
 ## Tech Stack
 
 - ASP.NET Core MVC (.NET 8)
