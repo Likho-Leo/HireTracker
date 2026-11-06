@@ -23,11 +23,17 @@
                 <input asp-for="Date" type="date" class="form-control" id="Date" />
                 <span class="text-danger" asp-validation-for="Date"></span>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" id="returnDateField">
                 <label asp-for="ReturnDate" class="form-label">Return Date</label>
                 <input asp-for="ReturnDate" type="date" class="form-control" id="ReturnDate" />
                 <span class="text-danger" asp-validation-for="ReturnDate"></span>
                 <span class="text-danger" id="returnDateError"></span>
+            </div>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="returnSameDay" />
+                    <label class="form-check-label" for="returnSameDay">Returning same day</label>
+                </div>
             </div>
             <div class="col-md-12">
                 <label asp-for="Vehicle" class="form-label">Vehicle</label>
@@ -77,6 +83,7 @@
                 <span class="text-danger" asp-validation-for="CompanyName"></span>
             </div>
             <div class="col-md-6">
+                <label asp-for="ContactNumber" class="form-label">Contact Number</label>
                 <input asp-for="ContactNumber" type="text" class="form-control" placeholder="e.g. 0721234567" id="ContactNumber" oninput="this.value = this.value.replace(/[^0-9+]/g, '')" />
                 <span class="text-danger" asp-validation-for="ContactNumber"></span>
                 <span class="text-danger" id="contactError"></span>
@@ -208,10 +215,22 @@
             }
         }
 
+        document.getElementById('returnSameDay').addEventListener('change', function() {
+            const returnDateInput = document.getElementById('ReturnDate');
+            const departureDate = document.getElementById('Date').value;
+            if (this.checked) {
+                returnDateInput.value = departureDate;
+                document.getElementById('returnDateField').style.display = 'none';
+            } else {
+                returnDateInput.value = '';
+                document.getElementById('returnDateField').style.display = 'block';
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Set min date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('Date').setAttribute('min', today);
+            // // Set min date to today
+            // const today = new Date().toISOString().split('T')[0];
+            // document.getElementById('Date').setAttribute('min', today);
 
             // Pre-populate vehicle rows
             const existingVehicles = '@Model.Vehicle'.split(', ');
