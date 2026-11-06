@@ -84,20 +84,10 @@ The following must be configured in `appsettings.json`:
 }
 ```
 
-## Local IIS Deployment
-
-1. Publish the app to a folder from Visual Studio
-2. Install the ASP.NET Core Hosting Bundle (x64) on the target machine
-3. Install SQL Server Express on the target machine
-4. Enable IIS through Windows Optional Features
-5. Create a new IIS site pointing to the published folder
-6. Update `appsettings.json` in the published folder with the correct connection string
-7. Grant the IIS app pool user sysadmin access on SQL Server
-8. Run `iisreset` and navigate to `http://localhost`
 
 ## Notes
 
-- Soft delete is used throughout — deleted bookings are flagged with `IsDeleted = true` and remain in the database
+- Soft delete is used throughout - Deleted bookings are flagged with `IsDeleted = true` and remain in the database
 - Multiple vehicle selection is stored as a comma separated string in the Vehicle column
 - Payment status is automatically set based on the relationship between Amount Due and Amount Paid
 - The app is intentionally kept private as it handles real business and client data
