@@ -84,8 +84,6 @@ The following must be configured in `appsettings.json`:
 }
 ```
 
-Never commit `appsettings.json` to version control. Use `appsettings.example.json` as a template.
-
 ## Local IIS Deployment
 
 1. Publish the app to a folder from Visual Studio
