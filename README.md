@@ -83,7 +83,15 @@ The following must be configured in `appsettings.json`:
   }
 }
 ```
+## Deployment
 
+HireTracker is deployed locally using IIS and SQL Server Express rather than being hosted publicly.
+
+This is an intentional decision because the application was developed specifically for a private family transport business in Matatiele, Eastern Cape. It manages internal business operations, including customer bookings, vehicle allocations and payment information.
+
+Local hosting provides the functionality required by the business while keeping operational and customer information within its local environment, without introducing unnecessary cloud hosting costs or public exposure.
+
+The application is fully functional in its local deployment environment.
 
 ## Notes
 
